@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-size: 13px;
+      background: #fff;
+      color: #111;
+      padding: 20px;
+    }
+
+    h2 {
+      font-size: 15px;
+      font-weight: 700;
+      margin-bottom: 4px;
+      color: #111;
+    }
+
+    p.subtitle {
+      font-size: 12px;
+      color: #888;
+      margin-bottom: 16px;
+    }
+
+    label {
+      display: block;
+      font-size: 11px;
+      font-weight: 600;
+      color: #555;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 4px;
+    }
+
+    input {
+      width: 100%;
+      padding: 8px 12px;
+      border: 1.5px solid #ddd;
+      border-radius: 8px;
+      font-size: 12px;
+      font-family: monospace;
+      color: #111;
+      outline: none;
+      margin-bottom: 10px;
+      transition: border-color 0.15s;
+    }
+
+    input:focus { border-color: #7c3aed; }
+
+    button {
+      width: 100%;
+      padding: 10px;
+      background: #7c3aed;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    button:hover { background: #6d28d9; }
+    button:disabled { background: #c4b5fd; cursor: not-allowed; }
+
+    .message {
+      margin-top: 14px;
+      padding: 10px 12px;
+      border-radius: 8px;
+      font-size: 12px;
+      line-height: 1.5;
+      display: none;
+    }
+
+    .message.success {
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      color: #166534;
+      display: block;
+    }
+
+    .message.error {
+      background: #fef2f2;
+      border: 1px solid #fecaca;
+      color: #991b1b;
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <h2>Content Lab</h2>
+  <p class="subtitle">Paste a Post ID from the web app to populate this frame.</p>
+
+  <label for="webAppUrl">Web App URL</label>
+  <input type="text" id="webAppUrl" placeholder="http://localhost:3000" value="http://localhost:3000" />
+
+  <label for="postId">Post ID</label>
+  <input type="text" id="postId" placeholder="cm9abc123..." />
+
+  <button id="populateBtn">Populate template</button>
+
+  <div id="message" class="message"></div>
+
+  <script>
+    const btn = document.getElementById("populateBtn");
+    const postIdInput = document.getElementById("postId");
+    const webAppUrlInput = document.getElementById("webAppUrl");
+    const messageEl = document.getElementById("message");
+
+    function showMessage(type, text) {
+      messageEl.className = "message " + type;
+      messageEl.textContent = text;
+    }
+
+    btn.addEventListener("click", () => {
+      const postId = postIdInput.value.trim();
+      const webAppUrl = webAppUrlInput.value.trim();
+
+      if (!postId) { showMessage("error", "Please enter a Post ID."); return; }
+      if (!webAppUrl) { showMessage("error", "Please enter the web app URL."); return; }
+
+      btn.disabled = true;
+      btn.textContent = "Fetching…";
+      messageEl.className = "message";
+
+      parent.postMessage({ pluginMessage: { type: "populate", postId, webAppUrl } }, "*");
+    });
+
+    window.onmessage = (event) => {
+      const msg = event.data.pluginMessage;
+      if (!msg) return;
+
+      btn.disabled = false;
+      btn.textContent = "Populate template";
+
+      if (msg.type === "success") {
+        showMessage("success", "✓ " + msg.message);
+        postIdInput.value = "";
+      } else if (msg.type === "error") {
+        showMessage("error", msg.message);
+      }
+    };
+  </script>
+</body>
+</html>

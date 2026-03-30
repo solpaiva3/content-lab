@@ -1,0 +1,36 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Client {
+  id           String   @id @default(cuid())
+  name         String
+  sector       String
+  personality  String
+  pillars      String
+  toneNotes    String?
+  colors       String
+  fonts        String
+  logoUrl      String?
+  logoVariants String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  posts        Post[]
+}
+
+model Post {
+  id               String   @id @default(cuid())
+  clientId         String
+  client           Client   @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  title            String
+  subtitle         String
+  body             String
+  visualDescription String
+  logoUsage        String
+  createdAt        DateTime @default(now())
+}
