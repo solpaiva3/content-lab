@@ -33,9 +33,10 @@ Client brand context:
 - Tone of voice: ${client.toneNotes || "not specified"}
 
 Return ONLY JSON with:
-- title: final title
-- subtitle: subtitle (refined hook)
-- body: full post copy (Instagram caption, with natural line breaks)
+- title: final title (max 8 words, goes on the Figma design frame)
+- subtitle: subtitle or refined hook (1 short sentence, goes on the Figma design frame)
+- body: short body text for the design frame (2-3 sentences max, punchy — this appears on the visual, not the caption)
+- caption: full Instagram caption (engaging copy with natural line breaks and relevant hashtags — this is for posting, not for the design)
 - visualDescription: detailed description of the image/scene for the designer
 - logoUsage: logo usage instruction for the post (e.g. "logo in the bottom right corner, white version")`;
 

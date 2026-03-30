@@ -134,8 +134,17 @@ export function PostPreview({ post, clientName, savedPostId }: PostPreviewProps)
       <div className="p-6 space-y-4">
         <PostField label="Title" value={post.title} />
         <PostField label="Subtitle" value={post.subtitle} />
-        <PostField label="Caption" value={post.body} multiline />
+        <PostField label="Body" value={post.body} multiline />
         <PostField label="Logo usage" value={post.logoUsage} accent="blue" />
+        {post.caption && (
+          <div className="rounded-xl border border-gray-200 px-4 py-3 bg-gray-50">
+            <div className="flex items-center justify-between mb-1">
+              <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider">Instagram Caption</p>
+              <span className="text-xs text-gray-400 italic">not sent to Figma</span>
+            </div>
+            <p className="text-sm text-gray-900 whitespace-pre-line leading-relaxed">{post.caption}</p>
+          </div>
+        )}
       </div>
 
       {/* Visual reference + image generation */}

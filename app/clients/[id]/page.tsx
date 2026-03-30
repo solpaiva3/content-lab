@@ -61,8 +61,7 @@ export default function ClientPage() {
     setError("");
     setPosts([]);
     setApprovedPosts({});
-    setFigmaSuccess(new Set());
-    setFigmaErrors({});
+    setSavedPostIds({});
 
     const results = await Promise.all(
       filledInputs.map(async (userIdea) => {
@@ -125,6 +124,9 @@ export default function ClientPage() {
       if (saveRes.ok) {
         const { id: savedId } = await saveRes.json();
         setSavedPostIds((prev) => ({ ...prev, [idea.id]: savedId }));
+      } else {
+        const saveJson = await saveRes.json().catch(() => ({}));
+        setError(`Post approved but failed to save for Figma plugin: ${saveJson.error || saveRes.status}`);
       }
     } catch (err) {
       setPosts((prev) => prev.map((p) => p.id === idea.id ? { ...p, status: "pending" } : p));

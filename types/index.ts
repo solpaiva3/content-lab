@@ -34,7 +34,8 @@ export interface Idea {
 export interface StructuredPost {
   title: string;
   subtitle: string;
-  body: string;
+  body: string;       // short text for the Figma design frame (post/body layer)
+  caption: string;    // full Instagram caption — UI only, not sent to Figma
   visualDescription: string;
   logoUsage: string;
 }

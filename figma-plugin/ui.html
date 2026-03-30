@@ -116,9 +116,9 @@
       messageEl.textContent = text;
     }
 
-    btn.addEventListener("click", () => {
+    btn.addEventListener("click", async () => {
       const postId = postIdInput.value.trim();
-      const webAppUrl = webAppUrlInput.value.trim();
+      const webAppUrl = webAppUrlInput.value.trim().replace(/\/$/, "");
 
       if (!postId) { showMessage("error", "Please enter a Post ID."); return; }
       if (!webAppUrl) { showMessage("error", "Please enter the web app URL."); return; }
@@ -127,7 +127,42 @@
       btn.textContent = "Fetching…";
       messageEl.className = "message";
 
-      parent.postMessage({ pluginMessage: { type: "populate", postId, webAppUrl } }, "*");
+      // Fetch the post content from the web app directly in the UI iframe
+      let content;
+      try {
+        const res = await fetch(`${webAppUrl}/api/figma/payload/${postId}`);
+        if (!res.ok) {
+          const json = await res.json().catch(() => ({}));
+          showMessage("error", json.error || `Failed to fetch post (${res.status})`);
+          btn.disabled = false;
+          btn.textContent = "Populate template";
+          return;
+        }
+        content = await res.json();
+      } catch (err) {
+        showMessage("error", `Network error: ${err.message}. Make sure the web app is running and accessible.`);
+        btn.disabled = false;
+        btn.textContent = "Populate template";
+        return;
+      }
+
+      // Fetch logo image bytes here in the UI (code.js can't make network requests)
+      let logoBytes = null;
+      if (content.logoUrl) {
+        try {
+          const imgRes = await fetch(content.logoUrl);
+          if (imgRes.ok) {
+            const buffer = await imgRes.arrayBuffer();
+            logoBytes = new Uint8Array(buffer);
+          }
+        } catch (e) {
+          // Logo fetch failed — continue without it
+          console.warn("Logo fetch failed:", e);
+        }
+      }
+
+      // Send content + logo bytes to code.js
+      parent.postMessage({ pluginMessage: { type: "populate", content, logoBytes } }, "*");
     });
 
     window.onmessage = (event) => {
