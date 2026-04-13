@@ -26,9 +26,19 @@ export async function POST(req: NextRequest) {
       response_format: "url",
     });
 
-    const url = response.data[0]?.url;
+    const image = response?.data?.[0];
+
+    if (!image) {
+      return NextResponse.json({ error: "No image returned from OpenAI" }, { status: 500 });
+    }
+
+    // Prefer url; fall back to b64_json as a data URI
+    const url = image.url ?? (
+      image.b64_json ? `data:image/png;base64,${image.b64_json}` : null
+    );
+
     if (!url) {
-      return NextResponse.json({ error: "No image returned from OpenAI" }, { status: 502 });
+      return NextResponse.json({ error: "OpenAI returned an image with no url or b64_json" }, { status: 500 });
     }
 
     return NextResponse.json({ url });
