@@ -1,29 +1,9 @@
 "use client";
 
-const PERSONALITY_OPTIONS = [
-  "Sophisticated",
-  "Welcoming",
-  "Laid-back",
-  "Irreverent",
-  "Inspiring",
-  "Technical",
-  "Minimalist",
-  "Playful",
-];
-
-const PILLAR_OPTIONS = [
-  "Product",
-  "Behind the scenes",
-  "Lifestyle",
-  "Educational",
-  "Recipes",
-  "Sustainability",
-  "Culture",
-];
-
 interface FormData {
-  personality: string[];
-  pillars: string[];
+  toneOfVoice: string;
+  personality: string;
+  pillars: string;
   toneNotes: string;
 }
 
@@ -33,104 +13,99 @@ interface Step2ToneOfVoiceProps {
   errors: Partial<Record<keyof FormData, string>>;
 }
 
-function PillSelector({
-  options,
-  selected,
-  onToggle,
+function TextareaField({
+  label,
+  required,
+  hint,
+  value,
+  placeholder,
+  rows,
+  onChange,
   error,
 }: {
-  options: string[];
-  selected: string[];
-  onToggle: (val: string) => void;
+  label: string;
+  required?: boolean;
+  hint?: string;
+  value: string;
+  placeholder: string;
+  rows?: number;
+  onChange: (val: string) => void;
   error?: string;
 }) {
   return (
     <div>
-      <div className="flex flex-wrap gap-2">
-        {options.map((opt) => {
-          const isSelected = selected.includes(opt);
-          return (
-            <button
-              key={opt}
-              type="button"
-              onClick={() => onToggle(opt)}
-              className={`px-3 py-1.5 rounded-full text-sm font-medium transition-all border ${
-                isSelected
-                  ? "bg-violet-600 text-white border-violet-600"
-                  : "bg-white text-gray-600 border-gray-200 hover:border-violet-400 hover:text-violet-600"
-              }`}
-            >
-              {opt}
-            </button>
-          );
-        })}
-      </div>
-      {error && <p className="mt-1.5 text-xs text-red-500">{error}</p>}
+      <label className="block text-xs font-medium text-[#474747] uppercase tracking-widest mb-2">
+        {label}
+        {required && <span className="text-[#FC0100] ml-1">*</span>}
+        {hint && <span className="text-[#A0A0A0] normal-case font-light ml-1">{hint}</span>}
+      </label>
+      <textarea
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        placeholder={placeholder}
+        rows={rows ?? 3}
+        className={`w-full px-4 py-3 border bg-white text-black placeholder-[#C0C0C0] text-sm font-light focus:outline-none focus:ring-1 focus:ring-[#FC0100] transition resize-none ${
+          error ? "border-[#FC0100]" : "border-[#E5E5E5]"
+        }`}
+      />
+      {error && <p className="mt-1 text-xs text-[#FC0100]">{error}</p>}
     </div>
   );
 }
 
 export function Step2ToneOfVoice({ data, onChange, errors }: Step2ToneOfVoiceProps) {
-  const togglePersonality = (val: string) => {
-    const updated = data.personality.includes(val)
-      ? data.personality.filter((p) => p !== val)
-      : [...data.personality, val];
-    onChange({ personality: updated });
-  };
-
-  const togglePillar = (val: string) => {
-    const updated = data.pillars.includes(val)
-      ? data.pillars.filter((p) => p !== val)
-      : [...data.pillars, val];
-    onChange({ pillars: updated });
-  };
-
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       <div>
-        <h2 className="text-xl font-semibold text-gray-900">Tone of voice</h2>
-        <p className="mt-1 text-sm text-gray-500">Define the brand personality and content pillars.</p>
+        <h2
+          className="text-2xl text-black tracking-[-0.04em]"
+          style={{ fontFamily: "'Imbue', serif", fontWeight: 300 }}
+        >
+          Tone of voice
+        </h2>
+        <p className="mt-1 text-sm text-[#A0A0A0] font-light">
+          Describe the brand's voice, personality, and content focus.
+        </p>
       </div>
 
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">
-          Brand personality <span className="text-red-500">*</span>
-          <span className="text-gray-400 font-normal ml-1">(select at least one)</span>
-        </label>
-        <PillSelector
-          options={PERSONALITY_OPTIONS}
-          selected={data.personality}
-          onToggle={togglePersonality}
-          error={errors.personality}
-        />
-      </div>
+      <TextareaField
+        label="Tone of voice"
+        required
+        value={data.toneOfVoice}
+        placeholder="e.g. Warm and conversational, but never informal. Direct without being cold. Always encouraging, never pushy."
+        rows={3}
+        onChange={(val) => onChange({ toneOfVoice: val })}
+        error={errors.toneOfVoice}
+      />
 
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">
-          Content pillars <span className="text-red-500">*</span>
-          <span className="text-gray-400 font-normal ml-1">(select at least one)</span>
-        </label>
-        <PillSelector
-          options={PILLAR_OPTIONS}
-          selected={data.pillars}
-          onToggle={togglePillar}
-          error={errors.pillars}
-        />
-      </div>
+      <TextareaField
+        label="Brand personality"
+        required
+        value={data.personality}
+        placeholder="e.g. Confident, approachable, and a little playful. The brand feels like a knowledgeable friend — not a salesperson."
+        rows={3}
+        onChange={(val) => onChange({ personality: val })}
+        error={errors.personality}
+      />
 
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
-          Additional tone instructions
-          <span className="text-gray-400 font-normal ml-1">(optional)</span>
-        </label>
-        <textarea
-          value={data.toneNotes}
-          onChange={(e) => onChange({ toneNotes: e.target.value })}
-          placeholder="e.g. Always use inclusive language. Avoid technical jargon. Words we love: cozy, crafted, real..."
-          rows={3}
-          className="w-full px-4 py-2.5 rounded-xl border border-gray-200 bg-white text-gray-900 placeholder-gray-400 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500 transition resize-none"
-        />
-      </div>
+      <TextareaField
+        label="Content pillars"
+        required
+        value={data.pillars}
+        placeholder="e.g. Product education, behind-the-scenes, customer stories, sustainability, seasonal recipes."
+        rows={3}
+        onChange={(val) => onChange({ pillars: val })}
+        error={errors.pillars}
+      />
+
+      <TextareaField
+        label="General brand context"
+        hint="(optional)"
+        value={data.toneNotes}
+        placeholder="Anything else the AI should know — words to avoid, recurring themes, campaign context, audience notes…"
+        rows={4}
+        onChange={(val) => onChange({ toneNotes: val })}
+      />
     </div>
   );
 }

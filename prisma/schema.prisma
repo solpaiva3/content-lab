@@ -14,8 +14,10 @@ model Client {
   personality  String
   pillars      String
   toneNotes    String?
+  toneOfVoice  String?
   colors       String
   fonts        String
+  fontFiles    String?
   logoUrl      String?
   logoVariants String?
   createdAt    DateTime @default(now())
@@ -27,11 +29,13 @@ model Post {
   id               String   @id @default(cuid())
   clientId         String
   client           Client   @relation(fields: [clientId], references: [id], onDelete: Cascade)
-  title            String
-  subtitle         String
-  body             String
+  templateId       String   @default("") // which CarouselTemplate was used
+  slides           String   @default("[]") // JSON array of CarouselSlide
+  title            String   @default("") // hook slide title — for Figma plugin compat
+  subtitle         String   @default("") // hook slide subtitle — for Figma plugin compat
+  body             String   @default("") // insight slide body — for Figma plugin compat
   caption          String   @default("")
-  visualDescription String
-  logoUsage        String
+  visualDescription String  @default("")
+  logoUsage        String   @default("")
   createdAt        DateTime @default(now())
 }

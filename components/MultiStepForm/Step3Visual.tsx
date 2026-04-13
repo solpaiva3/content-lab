@@ -3,29 +3,12 @@
 import { useState, useRef } from "react";
 import Image from "next/image";
 
-const FONT_OPTIONS = [
-  "Playfair Display",
-  "DM Sans",
-  "Sora",
-  "Instrument Serif",
-  "Plus Jakarta Sans",
-  "Fraunces",
-];
-
-const FONT_MAP: Record<string, string> = {
-  "Playfair Display": "'Playfair Display', serif",
-  "DM Sans": "'DM Sans', sans-serif",
-  "Sora": "'Sora', sans-serif",
-  "Instrument Serif": "'Instrument Serif', serif",
-  "Plus Jakarta Sans": "'Plus Jakarta Sans', sans-serif",
-  "Fraunces": "'Fraunces', serif",
-};
-
 export interface VisualData {
   logoUrl: string;
   logoVariants: { light?: string; dark?: string };
   colors: string[];
   fonts: { primary: string; secondary: string };
+  fontFiles: { primary?: string; secondary?: string };
 }
 
 interface Step3VisualProps {
@@ -61,10 +44,10 @@ function LogoUploader({
 
   return (
     <div className="space-y-2">
-      <span className="text-sm text-gray-600 font-medium">{label}</span>
+      <span className="text-xs text-[#474747] font-medium uppercase tracking-widest">{label}</span>
       <div
-        className={`relative rounded-xl border-2 border-dashed flex items-center justify-center h-24 cursor-pointer transition ${
-          currentUrl ? "border-violet-300 bg-violet-50" : "border-gray-200 hover:border-violet-300"
+        className={`relative border flex items-center justify-center h-24 cursor-pointer transition ${
+          currentUrl ? "border-[#FC0100]" : "border-dashed border-[#E5E5E5] hover:border-black"
         }`}
         onClick={() => inputRef.current?.click()}
         onDragOver={(e) => e.preventDefault()}
@@ -75,22 +58,20 @@ function LogoUploader({
         }}
       >
         {currentUrl ? (
-          <div
-            className={`relative w-full h-full rounded-xl flex items-center justify-center ${bgDark ? "bg-gray-900" : "bg-white"}`}
-          >
+          <div className={`relative w-full h-full flex items-center justify-center ${bgDark ? "bg-black" : "bg-white"}`}>
             <Image src={currentUrl} alt={label} width={80} height={56} className="object-contain max-h-14" />
           </div>
         ) : uploading ? (
-          <div className="flex flex-col items-center gap-1 text-violet-500">
-            <div className="w-5 h-5 border-2 border-violet-500 border-t-transparent rounded-full animate-spin" />
-            <span className="text-xs">Uploading...</span>
+          <div className="flex flex-col items-center gap-1 text-[#A0A0A0]">
+            <div className="w-4 h-4 border border-[#FC0100] border-t-transparent rounded-full animate-spin" />
+            <span className="text-xs font-light">Uploading…</span>
           </div>
         ) : (
-          <div className="flex flex-col items-center gap-1 text-gray-400">
-            <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+          <div className="flex flex-col items-center gap-1 text-[#C0C0C0]">
+            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
             </svg>
-            <span className="text-xs">PNG, SVG or JPG • max 2MB</span>
+            <span className="text-xs font-light">PNG, SVG or JPG</span>
           </div>
         )}
         <input
@@ -108,7 +89,7 @@ function LogoUploader({
         <button
           type="button"
           onClick={() => setBgDark(!bgDark)}
-          className="text-xs text-gray-500 hover:text-violet-600 transition"
+          className="text-xs text-[#A0A0A0] hover:text-black transition font-light"
         >
           Toggle {bgDark ? "light" : "dark"} background
         </button>
@@ -131,7 +112,7 @@ function ColorSwatch({
   return (
     <div className="flex flex-col items-center gap-1">
       <div
-        className="w-10 h-10 rounded-lg border border-gray-200 cursor-pointer relative overflow-hidden"
+        className="w-10 h-10 border border-[#E5E5E5] cursor-pointer relative overflow-hidden"
         style={{ backgroundColor: color }}
       >
         <input
@@ -146,16 +127,111 @@ function ColorSwatch({
         value={color}
         onChange={(e) => onChange(e.target.value)}
         maxLength={7}
-        className="w-16 text-center text-xs border border-gray-200 rounded px-1 py-0.5 font-mono focus:outline-none focus:ring-1 focus:ring-violet-500"
+        className="w-16 text-center text-xs border border-[#E5E5E5] px-1 py-0.5 font-mono focus:outline-none focus:ring-1 focus:ring-[#FC0100] text-[#474747]"
       />
       <button
         type="button"
         onClick={onRemove}
-        className="text-gray-300 hover:text-red-400 text-xs transition"
+        className="text-[#C0C0C0] hover:text-[#FC0100] text-xs transition"
         title={`Remove color ${index + 1}`}
       >
         ×
       </button>
+    </div>
+  );
+}
+
+function FontUploader({
+  role,
+  fontName,
+  fileUrl,
+  onNameChange,
+  onFileUploaded,
+}: {
+  role: "primary" | "secondary";
+  fontName: string;
+  fileUrl?: string;
+  onNameChange: (name: string) => void;
+  onFileUploaded: (url: string) => void;
+}) {
+  const [uploading, setUploading] = useState(false);
+  const [uploadError, setUploadError] = useState("");
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  async function handleFile(file: File) {
+    setUploading(true);
+    setUploadError("");
+    const fd = new FormData();
+    fd.append("file", file);
+    fd.append("variant", `font-${role}`);
+    const res = await fetch("/api/upload", { method: "POST", body: fd });
+    const json = await res.json();
+    setUploading(false);
+    if (json.url) {
+      onFileUploaded(json.url);
+    } else {
+      setUploadError(json.error ?? "Upload failed");
+    }
+  }
+
+  const fileName = fileUrl ? fileUrl.split("/").pop() : null;
+
+  return (
+    <div className="space-y-2">
+      <label className="block text-xs text-[#474747] font-medium uppercase tracking-widest capitalize">
+        {role} font
+      </label>
+      <input
+        type="text"
+        value={fontName}
+        onChange={(e) => onNameChange(e.target.value)}
+        placeholder={role === "primary" ? "e.g. Imbue" : "e.g. Inter"}
+        className="w-full px-3 py-2.5 border border-[#E5E5E5] bg-white text-sm text-black placeholder-[#C0C0C0] font-light focus:outline-none focus:ring-1 focus:ring-[#FC0100] transition"
+      />
+      <div
+        className={`border flex items-center justify-center h-14 cursor-pointer transition ${
+          fileUrl ? "border-[#FC0100]" : "border-dashed border-[#E5E5E5] hover:border-black"
+        }`}
+        onClick={() => inputRef.current?.click()}
+        onDragOver={(e) => e.preventDefault()}
+        onDrop={(e) => {
+          e.preventDefault();
+          const f = e.dataTransfer.files[0];
+          if (f) handleFile(f);
+        }}
+      >
+        {uploading ? (
+          <div className="flex items-center gap-2 text-[#A0A0A0] text-xs font-light">
+            <div className="w-3.5 h-3.5 border border-[#FC0100] border-t-transparent rounded-full animate-spin" />
+            Uploading…
+          </div>
+        ) : fileUrl ? (
+          <div className="flex items-center gap-2 text-black text-xs px-3 font-light">
+            <svg className="w-3.5 h-3.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <span className="truncate">{fileName}</span>
+          </div>
+        ) : (
+          <div className="flex flex-col items-center gap-0.5 text-[#C0C0C0]">
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+            </svg>
+            <span className="text-xs font-light">TTF, OTF, WOFF or WOFF2</span>
+          </div>
+        )}
+        <input
+          ref={inputRef}
+          type="file"
+          className="hidden"
+          accept=".ttf,.otf,.woff,.woff2"
+          onChange={(e) => {
+            const f = e.target.files?.[0];
+            if (f) handleFile(f);
+          }}
+        />
+      </div>
+      {uploadError && <p className="text-xs text-[#FC0100]">{uploadError}</p>}
     </div>
   );
 }
@@ -178,15 +254,20 @@ export function Step3Visual({ data, onChange }: Step3VisualProps) {
   };
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-10">
       <div>
-        <h2 className="text-xl font-semibold text-gray-900">Visual identity</h2>
-        <p className="mt-1 text-sm text-gray-500">Logo, color palette and typography.</p>
+        <h2
+          className="text-2xl text-black tracking-[-0.04em]"
+          style={{ fontFamily: "'Imbue', serif", fontWeight: 300 }}
+        >
+          Visual identity
+        </h2>
+        <p className="mt-1 text-sm text-[#A0A0A0] font-light">Logo, color palette and typography.</p>
       </div>
 
       {/* Logo */}
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-3">Logo</label>
+        <p className="text-xs font-medium text-[#474747] uppercase tracking-widest mb-4">Logo</p>
         <div className="grid grid-cols-3 gap-4">
           <LogoUploader
             label="Main"
@@ -195,13 +276,13 @@ export function Step3Visual({ data, onChange }: Step3VisualProps) {
             onUploaded={(url) => onChange({ logoUrl: url })}
           />
           <LogoUploader
-            label="Light background"
+            label="Light bg"
             variant="light"
             currentUrl={data.logoVariants.light || ""}
             onUploaded={(url) => onChange({ logoVariants: { ...data.logoVariants, light: url } })}
           />
           <LogoUploader
-            label="Dark background"
+            label="Dark bg"
             variant="dark"
             currentUrl={data.logoVariants.dark || ""}
             onUploaded={(url) => onChange({ logoVariants: { ...data.logoVariants, dark: url } })}
@@ -211,10 +292,10 @@ export function Step3Visual({ data, onChange }: Step3VisualProps) {
 
       {/* Colors */}
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-3">
+        <p className="text-xs font-medium text-[#474747] uppercase tracking-widest mb-4">
           Color palette
-          <span className="text-gray-400 font-normal ml-1">(up to 6)</span>
-        </label>
+          <span className="text-[#A0A0A0] font-light normal-case ml-1">(up to 6)</span>
+        </p>
         <div className="flex flex-wrap items-end gap-3">
           {data.colors.map((color, i) => (
             <ColorSwatch
@@ -229,14 +310,14 @@ export function Step3Visual({ data, onChange }: Step3VisualProps) {
             <button
               type="button"
               onClick={addColor}
-              className="w-10 h-10 rounded-lg border-2 border-dashed border-gray-300 flex items-center justify-center text-gray-400 hover:border-violet-400 hover:text-violet-500 transition"
+              className="w-10 h-10 border border-dashed border-[#E5E5E5] flex items-center justify-center text-[#C0C0C0] hover:border-[#FC0100] hover:text-[#FC0100] transition text-lg font-light"
             >
               +
             </button>
           )}
         </div>
         {data.colors.length > 0 && (
-          <div className="mt-3 flex gap-0 rounded-lg overflow-hidden h-6 w-full max-w-sm">
+          <div className="mt-4 flex gap-0 h-2 w-full max-w-sm">
             {data.colors.map((color, i) => (
               <div key={i} className="flex-1" style={{ backgroundColor: color }} />
             ))}
@@ -246,32 +327,17 @@ export function Step3Visual({ data, onChange }: Step3VisualProps) {
 
       {/* Typography */}
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-3">Typography</label>
-        <div className="grid grid-cols-2 gap-4">
+        <p className="text-xs font-medium text-[#474747] uppercase tracking-widest mb-4">Typography</p>
+        <div className="grid grid-cols-2 gap-6">
           {(["primary", "secondary"] as const).map((role) => (
-            <div key={role}>
-              <label className="block text-xs text-gray-500 mb-2 capitalize">{role} font</label>
-              <div className="space-y-1">
-                {FONT_OPTIONS.map((font) => {
-                  const isSelected = data.fonts[role] === font;
-                  return (
-                    <button
-                      key={font}
-                      type="button"
-                      onClick={() => onChange({ fonts: { ...data.fonts, [role]: font } })}
-                      className={`w-full text-left px-3 py-2 rounded-lg border text-sm transition ${
-                        isSelected
-                          ? "border-violet-500 bg-violet-50 text-violet-700"
-                          : "border-gray-200 text-gray-700 hover:border-violet-300"
-                      }`}
-                      style={{ fontFamily: FONT_MAP[font] }}
-                    >
-                      {font}
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
+            <FontUploader
+              key={role}
+              role={role}
+              fontName={data.fonts[role]}
+              fileUrl={data.fontFiles?.[role]}
+              onNameChange={(name) => onChange({ fonts: { ...data.fonts, [role]: name } })}
+              onFileUploaded={(url) => onChange({ fontFiles: { ...data.fontFiles, [role]: url } })}
+            />
           ))}
         </div>
       </div>

@@ -11,13 +11,19 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "No file provided" }, { status: 400 });
   }
 
-  const allowedTypes = ["image/png", "image/svg+xml", "image/jpeg"];
-  if (!allowedTypes.includes(file.type)) {
-    return NextResponse.json({ error: "Invalid file type. PNG, SVG or JPG only." }, { status: 400 });
+  const imageTypes = ["image/png", "image/svg+xml", "image/jpeg"];
+  const fontExtensions = [".ttf", ".otf", ".woff", ".woff2"];
+  const fileExt = "." + (file.name.split(".").pop() ?? "").toLowerCase();
+  const isFontFile = fontExtensions.includes(fileExt);
+  const isImageFile = imageTypes.includes(file.type);
+
+  if (!isImageFile && !isFontFile) {
+    return NextResponse.json({ error: "Invalid file type. Images (PNG, SVG, JPG) or fonts (TTF, OTF, WOFF, WOFF2) only." }, { status: 400 });
   }
 
-  if (file.size > 2 * 1024 * 1024) {
-    return NextResponse.json({ error: "File too large. Max 2MB." }, { status: 400 });
+  const maxSize = isFontFile ? 5 * 1024 * 1024 : 2 * 1024 * 1024;
+  if (file.size > maxSize) {
+    return NextResponse.json({ error: `File too large. Max ${isFontFile ? "5MB" : "2MB"}.` }, { status: 400 });
   }
 
   const uploadsDir = path.join(process.cwd(), "public", "uploads");

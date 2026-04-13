@@ -1,66 +1,45 @@
 import { NextRequest, NextResponse } from "next/server";
-import Anthropic from "@anthropic-ai/sdk";
-import { anthropic } from "@/lib/anthropic";
+import { generatePost, type PostGenerationInput } from "@/lib/ai/generate-post";
+import { TEMPLATES } from "@/lib/ai/templates";
+import type { GenerationMode } from "@/lib/ai/modes";
+
+const DEFAULT_TEMPLATE_ID = TEMPLATES[0].id; // educational-5
 
 export async function POST(req: NextRequest) {
-  if (!process.env.ANTHROPIC_API_KEY) {
-    return NextResponse.json({ error: "ANTHROPIC_API_KEY is not configured" }, { status: 500 });
+  if (!process.env.OPENAI_API_KEY) {
+    return NextResponse.json({ error: "OPENAI_API_KEY is not configured" }, { status: 500 });
   }
 
-  const { client, userIdea } = await req.json();
+  const body = await req.json();
+  const { client, userIdea, reference, mode, templateId } = body as {
+    client: PostGenerationInput["client"];
+    userIdea: string;
+    reference?: string | null;
+    mode?: GenerationMode;
+    templateId?: string;
+  };
 
-  if (!client || !userIdea) {
+  if (!client || !userIdea?.trim()) {
     return NextResponse.json({ error: "client and userIdea are required" }, { status: 400 });
   }
 
-  const personality: string[] = JSON.parse(client.personality || "[]");
-  const pillars: string[] = JSON.parse(client.pillars || "[]");
+  const resolvedMode: GenerationMode =
+    mode === "quality" || mode === "fast" ? mode : "quality";
 
-  const prompt = `You are an Instagram content strategist. Based on the post idea and client brand context below, generate structured post content.
+  const resolvedTemplateId = templateId ?? DEFAULT_TEMPLATE_ID;
 
-Client: ${client.name}
-Industry: ${client.sector}
-Brand personality: ${personality.join(", ")}
-Content pillars: ${pillars.join(", ")}
-Tone of voice: ${client.toneNotes || "not specified"}
-
-Post idea: ${userIdea}
-
-Return ONLY a JSON object with:
-- title: short impactful title (max 8 words)
-- characteristic1: first key message or content point (1-2 sentences)
-- characteristic2: second key message or content point (1-2 sentences)
-- characteristic3: third key message or content point (1-2 sentences) — only if it adds value, otherwise return null
-
-No markdown, no extra text. Valid JSON only.`;
-
-  let raw: string;
   try {
-    const response = await anthropic.messages.create({
-      model: "claude-opus-4-6",
-      max_tokens: 1024,
-      messages: [{ role: "user", content: prompt }],
+    const carousel = await generatePost({
+      client,
+      userIdea,
+      reference: reference ?? null,
+      mode: resolvedMode,
+      templateId: resolvedTemplateId,
     });
-    const block = response.content.find((b): b is Anthropic.TextBlock => b.type === "text");
-    raw = block?.text ?? "";
-    console.log("[generate/ideas] raw response:", raw);
+    return NextResponse.json({ post: carousel });
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : String(err);
-    console.error("[generate/ideas] API error:", message);
-    return NextResponse.json({ error: `API error: ${message}` }, { status: 502 });
-  }
-
-  if (!raw.trim()) {
-    return NextResponse.json({ error: "API returned an empty response" }, { status: 502 });
-  }
-
-  const cleaned = raw.replace(/^```(?:json)?\s*/i, "").replace(/\s*```$/, "").trim();
-
-  try {
-    const post = JSON.parse(cleaned);
-    return NextResponse.json({ post });
-  } catch {
-    console.error("[generate/ideas] Failed to parse JSON:", raw);
-    return NextResponse.json({ error: "Failed to parse AI response", raw }, { status: 500 });
+    console.error("[generate/ideas] error:", message);
+    return NextResponse.json({ error: message }, { status: 502 });
   }
 }

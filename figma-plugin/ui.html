@@ -17,16 +17,16 @@
       font-size: 15px;
       font-weight: 700;
       margin-bottom: 4px;
-      color: #111;
     }
 
     p.subtitle {
       font-size: 12px;
       color: #888;
       margin-bottom: 16px;
+      line-height: 1.5;
     }
 
-    label {
+    label.field-label {
       display: block;
       font-size: 11px;
       font-weight: 600;
@@ -36,145 +36,602 @@
       margin-bottom: 4px;
     }
 
-    input {
+    input[type="text"] {
       width: 100%;
       padding: 8px 12px;
       border: 1.5px solid #ddd;
-      border-radius: 8px;
+      border-radius: 6px;
       font-size: 12px;
       font-family: monospace;
       color: #111;
       outline: none;
-      margin-bottom: 10px;
+      margin-bottom: 12px;
       transition: border-color 0.15s;
     }
+    input[type="text"]:focus { border-color: #111; }
 
-    input:focus { border-color: #7c3aed; }
+    /* ── Slide list ─────────────────────────────────────────────────── */
 
-    button {
+    #slideList { display: none; margin-bottom: 14px; }
+
+    .slide-list-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+    .slide-list-title {
+      font-size: 10px;
+      font-weight: 600;
+      color: #aaa;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+    .slide-list-meta { font-size: 10px; color: #ccc; }
+
+    .slide-item {
+      border: 1.5px solid #e5e5e5;
+      border-radius: 10px;
+      overflow: hidden;
+      margin-bottom: 8px;
+      background: #fafafa;
+    }
+
+    /* Text section */
+    .slide-text {
+      padding: 10px 12px 8px;
+      border-bottom: 1px solid #f0f0f0;
+    }
+    .slide-header {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 4px;
+    }
+    .slide-num {
+      font-size: 9px;
+      font-weight: 700;
+      color: #ccc;
+      letter-spacing: 0.06em;
+    }
+    .slide-label {
+      font-size: 10px;
+      font-weight: 600;
+      color: #555;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+    .slide-title {
+      font-size: 12px;
+      color: #111;
+      font-weight: 500;
+      line-height: 1.4;
+      margin-bottom: 2px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .slide-body {
+      font-size: 11px;
+      color: #888;
+      line-height: 1.4;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* Image section */
+    .slide-image {
+      padding: 10px 12px;
+    }
+
+    /* Upload zone */
+    .upload-zone {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 12px;
+      border: 1.5px dashed #ddd;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: border-color 0.15s, background 0.15s;
+      background: #fff;
+    }
+    .upload-zone:hover { border-color: #999; background: #f9f9f9; }
+    .upload-zone.has-file { border-style: solid; border-color: #111; background: #f7f7f7; }
+
+    .upload-zone input[type="file"] {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      cursor: pointer;
+      width: 100%;
+      height: 100%;
+    }
+
+    .upload-thumb {
+      width: 32px;
+      height: 32px;
+      border-radius: 4px;
+      object-fit: cover;
+      flex-shrink: 0;
+      border: 1px solid #e5e5e5;
+      display: none;
+    }
+    .upload-thumb.visible { display: block; }
+
+    .upload-icon {
+      width: 18px;
+      height: 18px;
+      flex-shrink: 0;
+      color: #bbb;
+    }
+    .upload-icon.hidden { display: none; }
+
+    .upload-text { flex: 1; min-width: 0; }
+    .upload-text-primary {
+      font-size: 11px;
+      font-weight: 600;
+      color: #555;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .upload-text-secondary {
+      font-size: 10px;
+      color: #bbb;
+      margin-top: 1px;
+    }
+
+    .upload-clear {
+      flex-shrink: 0;
+      width: 16px;
+      height: 16px;
+      border: none;
+      background: none;
+      cursor: pointer;
+      color: #bbb;
+      padding: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+    }
+    .upload-clear:hover { color: #f00; }
+    .upload-clear.visible { display: flex; }
+
+    /* URL fallback */
+    .url-toggle {
+      margin-top: 6px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 10px;
+      color: #bbb;
+      padding: 0;
+      width: auto;
+      text-align: left;
+      display: flex;
+      align-items: center;
+      gap: 3px;
+    }
+    .url-toggle:hover { color: #888; background: none; }
+
+    .url-field {
+      display: none;
+      margin-top: 6px;
+    }
+    .url-field.open { display: block; }
+
+    .url-input {
+      width: 100%;
+      padding: 6px 10px;
+      border: 1.5px solid #e5e5e5;
+      border-radius: 6px;
+      font-size: 11px;
+      font-family: monospace;
+      color: #111;
+      outline: none;
+      background: #fff;
+      transition: border-color 0.15s;
+      margin-bottom: 0;
+    }
+    .url-input:focus { border-color: #999; }
+    .url-input::placeholder { color: #ccc; }
+
+    /* ── Buttons ───────────────────────────────────────────────────── */
+
+    #generateBtn {
+      display: none;
       width: 100%;
       padding: 10px;
-      background: #7c3aed;
+      background: #111;
       color: #fff;
       border: none;
-      border-radius: 8px;
+      border-radius: 6px;
       font-size: 13px;
       font-weight: 600;
       cursor: pointer;
       transition: background 0.15s;
     }
+    #generateBtn:hover    { background: #333; }
+    #generateBtn:disabled { background: #999; cursor: not-allowed; }
 
-    button:hover { background: #6d28d9; }
-    button:disabled { background: #c4b5fd; cursor: not-allowed; }
+    #fetchBtn {
+      width: 100%;
+      padding: 10px;
+      background: #111;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    #fetchBtn:hover    { background: #333; }
+    #fetchBtn:disabled { background: #999; cursor: not-allowed; }
+
+    /* ── Status ────────────────────────────────────────────────────── */
 
     .message {
       margin-top: 14px;
       padding: 10px 12px;
-      border-radius: 8px;
+      border-radius: 6px;
       font-size: 12px;
-      line-height: 1.5;
+      line-height: 1.55;
+      white-space: pre-wrap;
       display: none;
     }
+    .message.success { background:#f0fdf4; border:1px solid #bbf7d0; color:#166534; display:block; }
+    .message.error   { background:#fef2f2; border:1px solid #fecaca; color:#991b1b; display:block; }
 
-    .message.success {
-      background: #f0fdf4;
-      border: 1px solid #bbf7d0;
-      color: #166534;
-      display: block;
-    }
-
-    .message.error {
-      background: #fef2f2;
-      border: 1px solid #fecaca;
-      color: #991b1b;
-      display: block;
-    }
+    .hint { margin-top: 12px; font-size: 11px; color: #aaa; line-height: 1.5; }
   </style>
 </head>
 <body>
   <h2>Content Lab</h2>
-  <p class="subtitle">Paste a Post ID from the web app to populate this frame.</p>
+  <p class="subtitle">
+    Paste a Post ID from the web app.<br>
+    The plugin finds the right template frames automatically.
+  </p>
 
-  <label for="webAppUrl">Web App URL</label>
+  <label class="field-label" for="webAppUrl">Web App URL</label>
   <input type="text" id="webAppUrl" placeholder="http://localhost:3000" value="http://localhost:3000" />
 
-  <label for="postId">Post ID</label>
-  <input type="text" id="postId" placeholder="cm9abc123..." />
+  <label class="field-label" for="postId">Post ID</label>
+  <input type="text" id="postId" placeholder="cm9abc123…" />
 
-  <button id="populateBtn">Populate template</button>
+  <button id="fetchBtn">Load post</button>
+
+  <!-- Slide list — rendered after fetch -->
+  <div id="slideList">
+    <div class="slide-list-header" style="margin-top:16px;">
+      <span class="slide-list-title">Slides</span>
+      <span class="slide-list-meta" id="slideMeta"></span>
+    </div>
+    <div id="slideItems"></div>
+  </div>
+
+  <button id="generateBtn">Generate carousel</button>
 
   <div id="message" class="message"></div>
+  <p class="hint" id="hint"></p>
 
   <script>
-    const btn = document.getElementById("populateBtn");
-    const postIdInput = document.getElementById("postId");
-    const webAppUrlInput = document.getElementById("webAppUrl");
-    const messageEl = document.getElementById("message");
+    const fetchBtn     = document.getElementById("fetchBtn");
+    const generateBtn  = document.getElementById("generateBtn");
+    const postIdInput  = document.getElementById("postId");
+    const urlInput     = document.getElementById("webAppUrl");
+    const messageEl    = document.getElementById("message");
+    const hintEl       = document.getElementById("hint");
+    const slideListEl  = document.getElementById("slideList");
+    const slideItemsEl = document.getElementById("slideItems");
+    const slideMetaEl  = document.getElementById("slideMeta");
+
+    const SLIDE_LABELS = {
+      hook:"Hook", context:"Context", problem:"Problem",
+      insight:"Insight", cta:"CTA", setup:"Setup",
+      shift:"Shift", resolution:"Resolution", tension:"Tension",
+    };
+
+    let loadedContent = null;
+    // Per-slide state: { file: File|null, objectUrl: string|null, urlValue: string }
+    const slideState = {};
 
     function showMessage(type, text) {
       messageEl.className = "message " + type;
       messageEl.textContent = text;
     }
-
-    btn.addEventListener("click", async () => {
-      const postId = postIdInput.value.trim();
-      const webAppUrl = webAppUrlInput.value.trim().replace(/\/$/, "");
-
-      if (!postId) { showMessage("error", "Please enter a Post ID."); return; }
-      if (!webAppUrl) { showMessage("error", "Please enter the web app URL."); return; }
-
-      btn.disabled = true;
-      btn.textContent = "Fetching…";
+    function clearMessage() {
       messageEl.className = "message";
+      messageEl.textContent = "";
+    }
+    function resetFetch() {
+      fetchBtn.disabled = false;
+      fetchBtn.textContent = "Load post";
+    }
+    function resetGenerate() {
+      generateBtn.disabled = false;
+      generateBtn.textContent = "Generate carousel";
+    }
 
-      // Fetch the post content from the web app directly in the UI iframe
-      let content;
+    // Read a File as Uint8Array
+    function readFileBytes(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload  = () => resolve(new Uint8Array(reader.result));
+        reader.onerror = reject;
+        reader.readAsArrayBuffer(file);
+      });
+    }
+
+    // Build one slide item DOM node
+    function buildSlideItem(slide, index) {
+      slideState[index] = { file: null, objectUrl: null, urlValue: "" };
+
+      const item = document.createElement("div");
+      item.className = "slide-item";
+
+      const label   = SLIDE_LABELS[slide.type] || slide.type;
+      const preview = slide.subtitle || slide.body || "";
+
+      item.innerHTML = `
+        <div class="slide-text">
+          <div class="slide-header">
+            <span class="slide-num">${index + 1}</span>
+            <span class="slide-label">${label}</span>
+          </div>
+          <div class="slide-title">${slide.title || "—"}</div>
+          ${preview ? `<div class="slide-body">${preview}</div>` : ""}
+        </div>
+        <div class="slide-image">
+          <div class="upload-zone" id="zone-${index}">
+            <input type="file" accept="image/jpeg,image/png,image/webp" id="file-${index}" />
+            <img class="upload-thumb" id="thumb-${index}" src="" alt="" />
+            <svg class="upload-icon" id="icon-${index}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path stroke-linecap="round" stroke-linejoin="round"
+                d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
+            </svg>
+            <div class="upload-text">
+              <div class="upload-text-primary" id="upload-primary-${index}">Upload image</div>
+              <div class="upload-text-secondary">JPG, PNG or WEBP</div>
+            </div>
+            <button class="upload-clear" id="clear-${index}" title="Remove image" type="button">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+              </svg>
+            </button>
+          </div>
+          <button class="url-toggle" id="url-toggle-${index}" type="button">
+            <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
+            </svg>
+            Paste URL instead
+          </button>
+          <div class="url-field" id="url-field-${index}">
+            <input type="text" class="url-input" id="url-input-${index}" placeholder="https://…" />
+          </div>
+        </div>
+      `;
+
+      return item;
+    }
+
+    // Wire up events for one slide after inserting into DOM
+    function wireSlideEvents(index) {
+      const fileInput   = document.getElementById(`file-${index}`);
+      const zone        = document.getElementById(`zone-${index}`);
+      const thumb       = document.getElementById(`thumb-${index}`);
+      const icon        = document.getElementById(`icon-${index}`);
+      const clearBtn    = document.getElementById(`clear-${index}`);
+      const primaryText = document.getElementById(`upload-primary-${index}`);
+      const urlToggle   = document.getElementById(`url-toggle-${index}`);
+      const urlField    = document.getElementById(`url-field-${index}`);
+      const urlInputEl  = document.getElementById(`url-input-${index}`);
+
+      function setFile(file) {
+        if (!file) return;
+        // Revoke previous
+        if (slideState[index].objectUrl) URL.revokeObjectURL(slideState[index].objectUrl);
+        const objectUrl = URL.createObjectURL(file);
+        slideState[index].file      = file;
+        slideState[index].objectUrl = objectUrl;
+        // Update UI
+        thumb.src = objectUrl;
+        thumb.classList.add("visible");
+        icon.classList.add("hidden");
+        primaryText.textContent = file.name.length > 22 ? file.name.slice(0, 20) + "…" : file.name;
+        zone.classList.add("has-file");
+        clearBtn.classList.add("visible");
+      }
+
+      function clearFile() {
+        if (slideState[index].objectUrl) URL.revokeObjectURL(slideState[index].objectUrl);
+        slideState[index].file      = null;
+        slideState[index].objectUrl = null;
+        thumb.src = "";
+        thumb.classList.remove("visible");
+        icon.classList.remove("hidden");
+        primaryText.textContent = "Upload image";
+        zone.classList.remove("has-file");
+        clearBtn.classList.remove("visible");
+        fileInput.value = "";
+      }
+
+      fileInput.addEventListener("change", () => {
+        const file = fileInput.files && fileInput.files[0];
+        if (file) setFile(file);
+      });
+
+      clearBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        clearFile();
+      });
+
+      urlToggle.addEventListener("click", () => {
+        const isOpen = urlField.classList.toggle("open");
+        urlToggle.querySelector("svg").style.transform = isOpen ? "rotate(90deg)" : "";
+      });
+
+      urlInputEl.addEventListener("input", () => {
+        slideState[index].urlValue = urlInputEl.value.trim();
+      });
+    }
+
+    // Render all slides
+    function renderSlides(slides, templateId) {
+      slideItemsEl.innerHTML = "";
+      Object.keys(slideState).forEach(k => {
+        if (slideState[k].objectUrl) URL.revokeObjectURL(slideState[k].objectUrl);
+        delete slideState[k];
+      });
+
+      slideMetaEl.textContent =
+        `${templateId || "no template"} · ${slides.length} slide${slides.length !== 1 ? "s" : ""}`;
+
+      slides.forEach((slide, i) => {
+        const item = buildSlideItem(slide, i);
+        slideItemsEl.appendChild(item);
+        wireSlideEvents(i);
+      });
+
+      slideListEl.style.display = "block";
+      generateBtn.style.display = "block";
+    }
+
+    // ── Fetch post ────────────────────────────────────────────────────
+    fetchBtn.addEventListener("click", async () => {
+      const postId  = postIdInput.value.trim();
+      const baseUrl = urlInput.value.trim().replace(/\/$/, "");
+
+      if (!postId)  { showMessage("error", "Please enter a Post ID."); return; }
+      if (!baseUrl) { showMessage("error", "Please enter the web app URL."); return; }
+
+      fetchBtn.disabled = true;
+      fetchBtn.textContent = "Loading…";
+      clearMessage();
+      hintEl.textContent = "";
+      slideListEl.style.display = "none";
+      generateBtn.style.display = "none";
+      loadedContent = null;
+
       try {
-        const res = await fetch(`${webAppUrl}/api/figma/payload/${postId}`);
+        const res = await fetch(`${baseUrl}/api/figma/payload/${postId}`);
         if (!res.ok) {
           const json = await res.json().catch(() => ({}));
           showMessage("error", json.error || `Failed to fetch post (${res.status})`);
-          btn.disabled = false;
-          btn.textContent = "Populate template";
+          resetFetch();
           return;
         }
-        content = await res.json();
+        loadedContent = await res.json();
       } catch (err) {
-        showMessage("error", `Network error: ${err.message}. Make sure the web app is running and accessible.`);
-        btn.disabled = false;
-        btn.textContent = "Populate template";
+        showMessage("error", `Network error: ${err.message}`);
+        resetFetch();
         return;
       }
 
-      // Fetch logo image bytes here in the UI (code.js can't make network requests)
-      let logoBytes = null;
-      if (content.logoUrl) {
-        try {
-          const imgRes = await fetch(content.logoUrl);
-          if (imgRes.ok) {
-            const buffer = await imgRes.arrayBuffer();
-            logoBytes = new Uint8Array(buffer);
+      resetFetch();
+
+      const isCarousel = Array.isArray(loadedContent.slides) && loadedContent.slides.length > 0;
+      if (isCarousel) {
+        renderSlides(loadedContent.slides, loadedContent.templateId);
+        hintEl.textContent = loadedContent.templateId
+          ? `Template: ${loadedContent.templateId}`
+          : "No template ID — select a base frame as fallback.";
+      } else {
+        generateBtn.style.display = "block";
+        hintEl.textContent = "Legacy single-frame mode — select a base frame.";
+      }
+    });
+
+    // ── Generate carousel ─────────────────────────────────────────────
+    generateBtn.addEventListener("click", async () => {
+      if (!loadedContent) return;
+
+      generateBtn.disabled = true;
+      generateBtn.textContent = "Generating…";
+      clearMessage();
+
+      const slides = loadedContent.slides || [];
+
+      // imageSlots: one entry per slide, null or plain number[] (safe through any postMessage bridge)
+      // Uint8Array nested in a plain object can lose its type through Figma's serialisation —
+      // plain arrays of numbers always survive intact and are reconstructed in code.js.
+      const imageSlots = new Array(slides.length).fill(null);
+      const debugLines = [];
+
+      for (let i = 0; i < slides.length; i++) {
+        const state = slideState[i];
+        if (!state) { debugLines.push(`slide ${i+1}: no state`); continue; }
+
+        if (state.file) {
+          try {
+            const bytes = await readFileBytes(state.file); // Uint8Array
+            imageSlots[i] = Array.from(bytes);             // plain number[] — safe to serialise
+            debugLines.push(`slide ${i+1}: file "${state.file.name}" → ${bytes.byteLength} bytes`);
+          } catch (e) {
+            debugLines.push(`slide ${i+1}: file read failed — ${e.message}`);
           }
+        } else if (state.urlValue) {
+          try {
+            const res = await fetch(state.urlValue);
+            if (res.ok) {
+              const bytes = new Uint8Array(await res.arrayBuffer());
+              imageSlots[i] = Array.from(bytes);
+              debugLines.push(`slide ${i+1}: URL fetched → ${bytes.byteLength} bytes`);
+            } else {
+              debugLines.push(`slide ${i+1}: URL fetch failed — HTTP ${res.status}`);
+            }
+          } catch (e) {
+            debugLines.push(`slide ${i+1}: URL fetch error — ${e.message}`);
+          }
+        } else {
+          debugLines.push(`slide ${i+1}: no image`);
+        }
+      }
+
+      hintEl.textContent = debugLines.join("\n");
+
+      // Fetch logo bytes (convert to plain array too, for the same reason)
+      let logoSlot = null;
+      if (loadedContent.logoUrl) {
+        try {
+          const res = await fetch(loadedContent.logoUrl);
+          if (res.ok) logoSlot = Array.from(new Uint8Array(await res.arrayBuffer()));
         } catch (e) {
-          // Logo fetch failed — continue without it
           console.warn("Logo fetch failed:", e);
         }
       }
 
-      // Send content + logo bytes to code.js
-      parent.postMessage({ pluginMessage: { type: "populate", content, logoBytes } }, "*");
+      parent.postMessage({
+        pluginMessage: {
+          type: "populate",
+          content: loadedContent,
+          logoBytes:  logoSlot,   // plain number[] | null
+          imageSlots,             // plain number[][] | null[], one per slide
+        }
+      }, "*");
     });
 
+    // ── Response from code.js ─────────────────────────────────────────
     window.onmessage = (event) => {
       const msg = event.data.pluginMessage;
       if (!msg) return;
 
-      btn.disabled = false;
-      btn.textContent = "Populate template";
+      resetGenerate();
+      hintEl.textContent = "";
 
       if (msg.type === "success") {
         showMessage("success", "✓ " + msg.message);
         postIdInput.value = "";
+        slideListEl.style.display = "none";
+        generateBtn.style.display = "none";
+        loadedContent = null;
+        // Revoke any object URLs
+        Object.values(slideState).forEach(s => {
+          if (s.objectUrl) URL.revokeObjectURL(s.objectUrl);
+        });
       } else if (msg.type === "error") {
         showMessage("error", msg.message);
       }

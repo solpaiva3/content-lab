@@ -1,6 +1,6 @@
 "use client";
 
-const STEPS = ["Identity", "Tone of Voice", "Visual", "Review"];
+const STEPS = ["Identity", "Tone", "Visual", "Review"];
 
 interface StepIndicatorProps {
   currentStep: number;
@@ -16,18 +16,18 @@ export function StepIndicator({ currentStep }: StepIndicatorProps) {
 
         return (
           <div key={step} className="flex items-center">
-            <div className="flex flex-col items-center gap-1">
+            <div className="flex flex-col items-center gap-1.5">
               <div
-                className={`w-9 h-9 rounded-full flex items-center justify-center text-sm font-semibold transition-all ${
+                className={`w-7 h-7 flex items-center justify-center text-xs font-medium transition-all ${
                   isCompleted
-                    ? "bg-violet-600 text-white"
+                    ? "bg-[#FC0100] text-white"
                     : isActive
-                    ? "bg-violet-600 text-white ring-4 ring-violet-200"
-                    : "bg-gray-100 text-gray-400"
+                    ? "bg-[#FC0100] text-white ring-2 ring-offset-2 ring-[#FC0100]"
+                    : "bg-white text-[#A0A0A0] border border-[#E5E5E5]"
                 }`}
               >
                 {isCompleted ? (
-                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                  <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                   </svg>
                 ) : (
@@ -35,8 +35,8 @@ export function StepIndicator({ currentStep }: StepIndicatorProps) {
                 )}
               </div>
               <span
-                className={`text-xs font-medium whitespace-nowrap ${
-                  isActive ? "text-violet-600" : isCompleted ? "text-gray-600" : "text-gray-400"
+                className={`text-[10px] font-medium uppercase tracking-widest whitespace-nowrap transition-colors ${
+                  isActive ? "text-black" : isCompleted ? "text-[#474747]" : "text-[#A0A0A0]"
                 }`}
               >
                 {label}
@@ -44,8 +44,8 @@ export function StepIndicator({ currentStep }: StepIndicatorProps) {
             </div>
             {index < STEPS.length - 1 && (
               <div
-                className={`h-0.5 w-16 mx-1 mb-4 transition-all ${
-                  step < currentStep ? "bg-violet-600" : "bg-gray-200"
+                className={`h-px w-16 mx-2 mb-5 transition-all ${
+                  step < currentStep ? "bg-[#FC0100]" : "bg-[#E5E5E5]"
                 }`}
               />
             )}

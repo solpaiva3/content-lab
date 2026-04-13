@@ -14,26 +14,30 @@ interface FormState {
   name: string;
   sector: string;
   // Step 2
-  personality: string[];
-  pillars: string[];
+  toneOfVoice: string;
+  personality: string;
+  pillars: string;
   toneNotes: string;
   // Step 3
   logoUrl: string;
   logoVariants: { light?: string; dark?: string };
   colors: string[];
   fonts: { primary: string; secondary: string };
+  fontFiles: { primary?: string; secondary?: string };
 }
 
 const INITIAL_STATE: FormState = {
   name: "",
   sector: "",
-  personality: [],
-  pillars: [],
+  toneOfVoice: "",
+  personality: "",
+  pillars: "",
   toneNotes: "",
   logoUrl: "",
   logoVariants: {},
   colors: [],
   fonts: { primary: "", secondary: "" },
+  fontFiles: {},
 };
 
 export default function NewClientPage() {
@@ -56,8 +60,9 @@ export default function NewClientPage() {
       if (!form.sector.trim()) newErrors.sector = "Industry / niche is required";
     }
     if (step === 2) {
-      if (form.personality.length === 0) newErrors.personality = "Select at least one personality trait";
-      if (form.pillars.length === 0) newErrors.pillars = "Select at least one content pillar";
+      if (!form.toneOfVoice.trim()) newErrors.toneOfVoice = "Tone of voice is required";
+      if (!form.personality.trim()) newErrors.personality = "Brand personality is required";
+      if (!form.pillars.trim()) newErrors.pillars = "Content pillars are required";
     }
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -79,11 +84,13 @@ export default function NewClientPage() {
         body: JSON.stringify({
           name: form.name,
           sector: form.sector,
+          toneOfVoice: form.toneOfVoice || null,
           personality: form.personality,
           pillars: form.pillars,
           toneNotes: form.toneNotes || null,
           colors: form.colors,
           fonts: form.fonts,
+          fontFiles: Object.keys(form.fontFiles).length ? form.fontFiles : null,
           logoUrl: form.logoUrl || null,
           logoVariants: Object.keys(form.logoVariants).length ? form.logoVariants : null,
         }),
@@ -98,32 +105,37 @@ export default function NewClientPage() {
   };
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-white">
       {/* Header */}
-      <header className="bg-white border-b border-gray-100 sticky top-0 z-10">
-        <div className="max-w-3xl mx-auto px-6 py-4 flex items-center justify-between">
+      <header className="border-b border-[#E5E5E5] sticky top-0 z-10 bg-white">
+        <div className="max-w-3xl mx-auto px-8 py-5 flex items-center justify-between">
           <Link
             href="/"
-            className="flex items-center gap-2 text-sm text-gray-500 hover:text-gray-900 transition"
+            className="flex items-center gap-2 text-sm text-[#A0A0A0] hover:text-[#FC0100] transition font-light"
           >
-            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+            <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
             </svg>
             Back
           </Link>
-          <span className="font-semibold text-gray-900">New client</span>
+          <span
+            className="text-base text-black tracking-[-0.04em]"
+            style={{ fontFamily: "'Imbue', serif", fontWeight: 300 }}
+          >
+            New client
+          </span>
           <div className="w-16" />
         </div>
       </header>
 
-      <main className="max-w-3xl mx-auto px-6 py-10">
+      <main className="max-w-3xl mx-auto px-8 py-12">
         {/* Step indicator */}
-        <div className="flex justify-center mb-10">
+        <div className="flex justify-center mb-12">
           <StepIndicator currentStep={step} />
         </div>
 
         {/* Form card */}
-        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-8">
+        <div className="bg-white border border-[#E5E5E5] p-10">
           {step === 1 && (
             <Step1Identity
               data={{ name: form.name, sector: form.sector }}
@@ -133,7 +145,12 @@ export default function NewClientPage() {
           )}
           {step === 2 && (
             <Step2ToneOfVoice
-              data={{ personality: form.personality, pillars: form.pillars, toneNotes: form.toneNotes }}
+              data={{
+                toneOfVoice: form.toneOfVoice,
+                personality: form.personality,
+                pillars: form.pillars,
+                toneNotes: form.toneNotes,
+              }}
               onChange={updateForm}
               errors={errors}
             />
@@ -145,6 +162,7 @@ export default function NewClientPage() {
                 logoVariants: form.logoVariants,
                 colors: form.colors,
                 fonts: form.fonts,
+                fontFiles: form.fontFiles,
               }}
               onChange={updateForm}
             />
@@ -154,29 +172,31 @@ export default function NewClientPage() {
               data={{
                 name: form.name,
                 sector: form.sector,
+                toneOfVoice: form.toneOfVoice,
                 personality: form.personality,
                 pillars: form.pillars,
                 toneNotes: form.toneNotes,
                 logoUrl: form.logoUrl,
                 colors: form.colors,
                 fonts: form.fonts,
+                fontFiles: form.fontFiles,
               }}
             />
           )}
 
           {saveError && (
-            <div className="mt-4 p-3 rounded-xl bg-red-50 border border-red-200 text-sm text-red-700">
+            <div className="mt-4 p-4 border border-[#FC0100] bg-white text-sm text-[#FC0100] font-light">
               {saveError}
             </div>
           )}
 
           {/* Navigation */}
-          <div className="flex justify-between mt-8 pt-6 border-t border-gray-100">
+          <div className="flex justify-between mt-10 pt-8 border-t border-[#E5E5E5]">
             {step > 1 ? (
               <button
                 type="button"
                 onClick={prevStep}
-                className="px-5 py-2.5 rounded-xl border border-gray-200 text-sm text-gray-600 hover:border-violet-300 hover:text-violet-600 transition"
+                className="px-5 py-2.5 border border-[#E5E5E5] text-sm text-[#474747] font-light hover:border-[#FC0100] hover:text-[#FC0100] transition-all duration-200 rounded-xl"
               >
                 Back
               </button>
@@ -188,7 +208,7 @@ export default function NewClientPage() {
               <button
                 type="button"
                 onClick={nextStep}
-                className="px-5 py-2.5 rounded-xl bg-violet-600 text-white text-sm font-semibold hover:bg-violet-700 transition"
+                className="px-6 py-2.5 bg-[#FC0100] text-white text-sm font-medium hover:bg-[#D40000] transition-all duration-200 rounded-xl shadow-[0_2px_8px_rgba(252,1,0,0.25)] hover:shadow-[0_4px_16px_rgba(252,1,0,0.35)]"
               >
                 Continue
               </button>
@@ -197,11 +217,11 @@ export default function NewClientPage() {
                 type="button"
                 onClick={handleSave}
                 disabled={saving}
-                className="px-6 py-2.5 rounded-xl bg-violet-600 text-white text-sm font-semibold hover:bg-violet-700 transition disabled:opacity-60 flex items-center gap-2"
+                className="px-6 py-2.5 bg-[#FC0100] text-white text-sm font-medium hover:bg-[#D40000] transition-all duration-200 disabled:opacity-40 flex items-center gap-2 rounded-xl shadow-[0_2px_8px_rgba(252,1,0,0.25)] hover:shadow-[0_4px_16px_rgba(252,1,0,0.35)]"
               >
                 {saving ? (
                   <>
-                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                    <div className="w-3.5 h-3.5 border border-white border-t-transparent rounded-full animate-spin" />
                     Saving…
                   </>
                 ) : (
