@@ -472,6 +472,17 @@ async function populateSingleFrame(frame, content, logoBytes) {
 // ── Main message handler ──────────────────────────────────────────────────────
 
 figma.ui.onmessage = async (msg) => {
+  // ── Client storage (localStorage unavailable in data: URLs) ──────────────
+  if (msg.type === "getStorage") {
+    const value = await figma.clientStorage.getAsync(msg.key);
+    figma.ui.postMessage({ type: "storageValue", key: msg.key, value: value || null });
+    return;
+  }
+  if (msg.type === "setStorage") {
+    await figma.clientStorage.setAsync(msg.key, msg.value);
+    return;
+  }
+
   if (msg.type !== "populate") return;
 
   const { content, logoBytes: rawLogoBytes, imageSlots: rawImageSlots } = msg;

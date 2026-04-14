@@ -296,8 +296,11 @@
     The plugin finds the right template frames automatically.
   </p>
 
-  <label class="field-label" for="webAppUrl">Web App URL</label>
-  <input type="text" id="webAppUrl" placeholder="http://localhost:3000" value="http://localhost:3000" />
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
+    <label class="field-label" for="webAppUrl" style="margin-bottom:0;">Web App URL</label>
+    <span id="urlEnvBadge" style="font-size:10px;font-weight:600;letter-spacing:0.04em;padding:2px 7px;border-radius:20px;background:#f0f0f0;color:#888;"></span>
+  </div>
+  <input type="text" id="webAppUrl" placeholder="http://localhost:3000" />
 
   <label class="field-label" for="postId">Post ID</label>
   <input type="text" id="postId" placeholder="cm9abc123…" />
@@ -323,11 +326,32 @@
     const generateBtn  = document.getElementById("generateBtn");
     const postIdInput  = document.getElementById("postId");
     const urlInput     = document.getElementById("webAppUrl");
+    const urlBadge     = document.getElementById("urlEnvBadge");
     const messageEl    = document.getElementById("message");
     const hintEl       = document.getElementById("hint");
     const slideListEl  = document.getElementById("slideList");
     const slideItemsEl = document.getElementById("slideItems");
     const slideMetaEl  = document.getElementById("slideMeta");
+
+    const DEFAULT_URL = "http://localhost:3000";
+    const STORAGE_KEY = "contentlab_webapp_url";
+
+    function updateUrlBadge(value) {
+      const isLocal = !value || value.includes("localhost") || value.includes("127.0.0.1");
+      urlBadge.textContent = isLocal ? "Local" : "Production";
+      urlBadge.style.background = isLocal ? "#f0f0f0" : "#fff0f0";
+      urlBadge.style.color      = isLocal ? "#888"    : "#c00";
+    }
+
+    // Ask code.js to load the persisted URL on startup
+    parent.postMessage({ pluginMessage: { type: "getStorage", key: STORAGE_KEY } }, "*");
+
+    // Persist on every change and update badge
+    urlInput.addEventListener("input", () => {
+      const val = urlInput.value.trim();
+      updateUrlBadge(val);
+      parent.postMessage({ pluginMessage: { type: "setStorage", key: STORAGE_KEY, value: val } }, "*");
+    });
 
     const SLIDE_LABELS = {
       hook:"Hook", context:"Context", problem:"Problem",
@@ -618,6 +642,14 @@
     window.onmessage = (event) => {
       const msg = event.data.pluginMessage;
       if (!msg) return;
+
+      // Storage load response — restore saved URL
+      if (msg.type === "storageValue") {
+        const val = msg.value || DEFAULT_URL;
+        urlInput.value = val;
+        updateUrlBadge(val);
+        return;
+      }
 
       resetGenerate();
       hintEl.textContent = "";

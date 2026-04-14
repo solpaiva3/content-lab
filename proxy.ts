@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 const COOKIE_NAME = "auth";
 
 // Public paths — never redirect these to /login
-const PUBLIC_PATHS = ["/login", "/api/login", "/api/logout"];
+const PUBLIC_PATHS = ["/login", "/api/login", "/api/logout", "/api/figma/"];
 
 async function computeToken(secret: string): Promise<string> {
   const enc = new TextEncoder();
