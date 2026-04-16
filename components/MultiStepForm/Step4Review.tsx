@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 
 interface ReviewData {
   name: string;
@@ -45,7 +44,7 @@ export function Step4Review({ data }: { data: ReviewData }) {
           {data.logoUrl && (
             <div className="flex gap-4 py-2">
               <span className="text-xs text-[#A0A0A0] w-32 shrink-0 pt-0.5 uppercase tracking-widest">Logo</span>
-              <Image src={data.logoUrl} alt="Logo" width={64} height={40} className="object-contain h-10" />
+              <img src={data.logoUrl} alt="Logo" className="object-contain h-10 max-w-[64px]" />
             </div>
           )}
           {data.colors.length > 0 && (

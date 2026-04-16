@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useRef } from "react";
-import Image from "next/image";
 
 export interface VisualData {
   logoUrl: string;
@@ -28,18 +27,49 @@ function LogoUploader({
   onUploaded: (url: string) => void;
 }) {
   const [uploading, setUploading] = useState(false);
+  const [uploadError, setUploadError] = useState("");
   const [bgDark, setBgDark] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
   async function handleFile(file: File) {
     setUploading(true);
-    const fd = new FormData();
-    fd.append("file", file);
-    fd.append("variant", variant);
-    const res = await fetch("/api/upload", { method: "POST", body: fd });
-    const json = await res.json();
-    setUploading(false);
-    if (json.url) onUploaded(json.url);
+    setUploadError("");
+    console.log(`[logo-upload:${variant}] start — name: "${file.name}", type: "${file.type}", size: ${file.size} bytes`);
+    try {
+      const fd = new FormData();
+      fd.append("file", file);
+      fd.append("variant", variant);
+
+      const res = await fetch("/api/upload", { method: "POST", body: fd });
+      console.log(`[logo-upload:${variant}] response — status: ${res.status}, ok: ${res.ok}`);
+
+      let json: { url?: string; error?: string; mimeType?: string; size?: number } = {};
+      try {
+        json = await res.json();
+        console.log(`[logo-upload:${variant}] parsed JSON — keys: [${Object.keys(json).join(", ")}], url starts with: "${json.url?.slice(0, 30) ?? "none"}"`);
+      } catch (parseErr) {
+        console.error(`[logo-upload:${variant}] JSON parse failed:`, parseErr);
+        throw new Error(`Server error ${res.status} (invalid JSON)`);
+      }
+
+      if (!res.ok) {
+        throw new Error(json.error ?? `Upload failed (${res.status})`);
+      }
+
+      if (json.url) {
+        console.log(`[logo-upload:${variant}] calling onUploaded with data URI (${json.url.length} chars)`);
+        onUploaded(json.url);
+        console.log(`[logo-upload:${variant}] onUploaded done`);
+      } else {
+        throw new Error("Server returned no URL");
+      }
+    } catch (err) {
+      console.error(`[logo-upload:${variant}] error:`, err);
+      setUploadError(err instanceof Error ? err.message : "Upload failed");
+    } finally {
+      setUploading(false);
+      console.log(`[logo-upload:${variant}] done`);
+    }
   }
 
   return (
@@ -59,7 +89,7 @@ function LogoUploader({
       >
         {currentUrl ? (
           <div className={`relative w-full h-full flex items-center justify-center ${bgDark ? "bg-black" : "bg-white"}`}>
-            <Image src={currentUrl} alt={label} width={80} height={56} className="object-contain max-h-14" />
+            <img src={currentUrl} alt={label} className="object-contain max-h-14 max-w-full" />
           </div>
         ) : uploading ? (
           <div className="flex flex-col items-center gap-1 text-[#A0A0A0]">
@@ -85,6 +115,7 @@ function LogoUploader({
           }}
         />
       </div>
+      {uploadError && <p className="text-xs text-[#FC0100]">{uploadError}</p>}
       {currentUrl && (
         <button
           type="button"
@@ -161,16 +192,35 @@ function FontUploader({
   async function handleFile(file: File) {
     setUploading(true);
     setUploadError("");
-    const fd = new FormData();
-    fd.append("file", file);
-    fd.append("variant", `font-${role}`);
-    const res = await fetch("/api/upload", { method: "POST", body: fd });
-    const json = await res.json();
-    setUploading(false);
-    if (json.url) {
-      onFileUploaded(json.url);
-    } else {
-      setUploadError(json.error ?? "Upload failed");
+    console.log(`[font-upload:${role}] start — name: "${file.name}", type: "${file.type}", size: ${file.size} bytes`);
+    try {
+      const fd = new FormData();
+      fd.append("file", file);
+      fd.append("variant", `font-${role}`);
+
+      const res = await fetch("/api/upload", { method: "POST", body: fd });
+      console.log(`[font-upload:${role}] response — status: ${res.status}, ok: ${res.ok}`);
+
+      let json: { url?: string; error?: string } = {};
+      try {
+        json = await res.json();
+      } catch (parseErr) {
+        console.error(`[font-upload:${role}] JSON parse failed:`, parseErr);
+        throw new Error(`Server error ${res.status} (invalid JSON)`);
+      }
+
+      if (!res.ok) throw new Error(json.error ?? `Upload failed (${res.status})`);
+      if (json.url) {
+        onFileUploaded(json.url);
+        console.log(`[font-upload:${role}] done`);
+      } else {
+        throw new Error("Server returned no URL");
+      }
+    } catch (err) {
+      console.error(`[font-upload:${role}] error:`, err);
+      setUploadError(err instanceof Error ? err.message : "Upload failed");
+    } finally {
+      setUploading(false);
     }
   }
 

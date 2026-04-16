@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { Client, parseClient, parseClientPersonality } from "@/types";
@@ -21,12 +20,10 @@ export function ClientCard({ client }: { client: Client }) {
           <div className="flex items-center gap-3">
             {parsed.logoUrl ? (
               <div className="w-10 h-10 rounded-xl flex items-center justify-center overflow-hidden bg-[#F7F7F7]">
-                <Image
+                <img
                   src={parsed.logoUrl}
                   alt={parsed.name}
-                  width={32}
-                  height={32}
-                  className="object-contain"
+                  className="w-8 h-8 object-contain"
                 />
               </div>
             ) : (
