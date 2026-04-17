@@ -56,13 +56,13 @@ export default function NewClientPage() {
   const validateStep = (): boolean => {
     const newErrors: Partial<Record<string, string>> = {};
     if (step === 1) {
-      if (!form.name.trim()) newErrors.name = "Client name is required";
-      if (!form.sector.trim()) newErrors.sector = "Industry / niche is required";
+      if (!form.name.trim()) newErrors.name = "Nome do cliente é obrigatório";
+      if (!form.sector.trim()) newErrors.sector = "Setor / nicho é obrigatório";
     }
     if (step === 2) {
-      if (!form.toneOfVoice.trim()) newErrors.toneOfVoice = "Tone of voice is required";
-      if (!form.personality.trim()) newErrors.personality = "Brand personality is required";
-      if (!form.pillars.trim()) newErrors.pillars = "Content pillars are required";
+      if (!form.toneOfVoice.trim()) newErrors.toneOfVoice = "Tom de voz é obrigatório";
+      if (!form.personality.trim()) newErrors.personality = "Personalidade da marca é obrigatória";
+      if (!form.pillars.trim()) newErrors.pillars = "Pilares de conteúdo são obrigatórios";
     }
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -95,11 +95,11 @@ export default function NewClientPage() {
           logoVariants: Object.keys(form.logoVariants).length ? form.logoVariants : null,
         }),
       });
-      if (!res.ok) throw new Error("Failed to save client");
+      if (!res.ok) throw new Error("Erro ao salvar cliente");
       const client = await res.json();
       router.push(`/clients/${client.id}`);
     } catch (err) {
-      setSaveError(err instanceof Error ? err.message : "Unknown error");
+      setSaveError(err instanceof Error ? err.message : "Erro desconhecido");
       setSaving(false);
     }
   };
@@ -116,13 +116,13 @@ export default function NewClientPage() {
             <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
             </svg>
-            Back
+            Voltar
           </Link>
           <span
             className="text-base text-black tracking-[-0.04em]"
             style={{ fontFamily: "'Imbue', serif", fontWeight: 300 }}
           >
-            New client
+            Novo cliente
           </span>
           <div className="w-16" />
         </div>
@@ -198,7 +198,7 @@ export default function NewClientPage() {
                 onClick={prevStep}
                 className="px-5 py-2.5 border border-[#E5E5E5] text-sm text-[#474747] font-light hover:border-[#FC0100] hover:text-[#FC0100] transition-all duration-200 rounded-xl"
               >
-                Back
+                Voltar
               </button>
             ) : (
               <div />
@@ -210,7 +210,7 @@ export default function NewClientPage() {
                 onClick={nextStep}
                 className="px-6 py-2.5 bg-[#FC0100] text-white text-sm font-medium hover:bg-[#D40000] transition-all duration-200 rounded-xl shadow-[0_2px_8px_rgba(252,1,0,0.25)] hover:shadow-[0_4px_16px_rgba(252,1,0,0.35)]"
               >
-                Continue
+                Continuar
               </button>
             ) : (
               <button
@@ -222,10 +222,10 @@ export default function NewClientPage() {
                 {saving ? (
                   <>
                     <div className="w-3.5 h-3.5 border border-white border-t-transparent rounded-full animate-spin" />
-                    Saving…
+                    Salvando…
                   </>
                 ) : (
-                  "Save client"
+                  "Salvar cliente"
                 )}
               </button>
             )}

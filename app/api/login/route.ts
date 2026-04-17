@@ -16,11 +16,11 @@ export async function POST(req: NextRequest) {
   const secret        = process.env.AUTH_SECRET;
 
   if (!validEmail || !validPassword || !secret) {
-    return NextResponse.json({ error: "Server misconfigured." }, { status: 500 });
+    return NextResponse.json({ error: "Configuração incorreta no servidor." }, { status: 500 });
   }
 
   if (email !== validEmail || password !== validPassword) {
-    return NextResponse.json({ error: "Invalid credentials." }, { status: 401 });
+    return NextResponse.json({ error: "E-mail ou senha inválidos." }, { status: 401 });
   }
 
   const token = computeToken(secret);

@@ -22,22 +22,22 @@ export function Step4Review({ data }: { data: ReviewData }) {
           className="text-2xl text-black tracking-[-0.04em]"
           style={{ fontFamily: "'Imbue', serif", fontWeight: 300 }}
         >
-          Review
+          Revisão
         </h2>
-        <p className="mt-1 text-sm text-[#A0A0A0] font-light">Everything looks good? Save the client.</p>
+        <p className="mt-1 text-sm text-[#A0A0A0] font-light">Tudo certo? Salve o cliente.</p>
       </div>
 
       <div className="space-y-3">
-        <Section title="Identity">
-          <Row label="Client name" value={data.name} />
-          <Row label="Industry / Niche" value={data.sector} />
+        <Section title="Identidade">
+          <Row label="Nome do cliente" value={data.name} />
+          <Row label="Setor / Nicho" value={data.sector} />
         </Section>
 
-        <Section title="Tone of voice">
-          {data.toneOfVoice && <Row label="Tone of voice" value={data.toneOfVoice} />}
-          {data.personality && <Row label="Brand personality" value={data.personality} />}
-          {data.pillars && <Row label="Content pillars" value={data.pillars} />}
-          {data.toneNotes && <Row label="General context" value={data.toneNotes} />}
+        <Section title="Tom de voz">
+          {data.toneOfVoice && <Row label="Tom de voz" value={data.toneOfVoice} />}
+          {data.personality && <Row label="Personalidade da marca" value={data.personality} />}
+          {data.pillars && <Row label="Pilares de conteúdo" value={data.pillars} />}
+          {data.toneNotes && <Row label="Contexto geral" value={data.toneNotes} />}
         </Section>
 
         <Section title="Visual">
@@ -49,7 +49,7 @@ export function Step4Review({ data }: { data: ReviewData }) {
           )}
           {data.colors.length > 0 && (
             <div className="flex items-center gap-4 py-2">
-              <span className="text-xs text-[#A0A0A0] w-32 shrink-0 uppercase tracking-widest">Colors</span>
+              <span className="text-xs text-[#A0A0A0] w-32 shrink-0 uppercase tracking-widest">Cores</span>
               <div className="flex gap-1">
                 {data.colors.map((c, i) => (
                   <div
@@ -64,23 +64,23 @@ export function Step4Review({ data }: { data: ReviewData }) {
           )}
           {(data.fonts.primary || data.fonts.secondary) && (
             <div className="flex items-start gap-4 py-2">
-              <span className="text-xs text-[#A0A0A0] w-32 shrink-0 pt-0.5 uppercase tracking-widest">Typography</span>
+              <span className="text-xs text-[#A0A0A0] w-32 shrink-0 pt-0.5 uppercase tracking-widest">Tipografia</span>
               <div className="space-y-1">
                 {data.fonts.primary && (
                   <div className="flex items-center gap-2">
                     <span className="text-sm text-black font-light">{data.fonts.primary}</span>
-                    <span className="text-xs text-[#A0A0A0]">primary</span>
+                    <span className="text-xs text-[#A0A0A0]">primária</span>
                     {data.fontFiles?.primary && (
-                      <span className="text-xs text-[#474747] border border-[#E5E5E5] px-1.5 py-0.5">file</span>
+                      <span className="text-xs text-[#474747] border border-[#E5E5E5] px-1.5 py-0.5">arquivo</span>
                     )}
                   </div>
                 )}
                 {data.fonts.secondary && (
                   <div className="flex items-center gap-2">
                     <span className="text-sm text-black font-light">{data.fonts.secondary}</span>
-                    <span className="text-xs text-[#A0A0A0]">secondary</span>
+                    <span className="text-xs text-[#A0A0A0]">secundária</span>
                     {data.fontFiles?.secondary && (
-                      <span className="text-xs text-[#474747] border border-[#E5E5E5] px-1.5 py-0.5">file</span>
+                      <span className="text-xs text-[#474747] border border-[#E5E5E5] px-1.5 py-0.5">arquivo</span>
                     )}
                   </div>
                 )}

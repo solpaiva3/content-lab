@@ -20,9 +20,9 @@ interface IdeaCardProps {
 }
 
 const SLIDE_LABELS: Record<SlideType, string> = {
-  hook: "Hook",
-  context: "Context",
-  problem: "Problem",
+  hook: "Gancho",
+  context: "Contexto",
+  problem: "Problema",
   insight: "Insight",
   cta: "CTA",
 };
@@ -74,7 +74,7 @@ function SlideEditor({
       <input
         value={slide.title}
         onChange={(e) => onChange({ ...slide, title: e.target.value })}
-        placeholder="Title"
+        placeholder="Título"
         className="w-full text-sm text-black font-light border border-[#E5E5E5] rounded-lg px-3 py-2 focus:outline-none focus:border-[#FC0100] transition"
         style={{ fontFamily: "'Imbue', serif" }}
       />
@@ -82,7 +82,7 @@ function SlideEditor({
         <textarea
           value={slide.subtitle ?? ""}
           onChange={(e) => onChange({ ...slide, subtitle: e.target.value || undefined })}
-          placeholder="Subtitle (optional)"
+          placeholder="Subtítulo (opcional)"
           rows={2}
           className="w-full text-sm text-[#555] font-light border border-[#E5E5E5] rounded-lg px-3 py-2 resize-none focus:outline-none focus:border-[#FC0100] transition leading-relaxed"
         />
@@ -91,7 +91,7 @@ function SlideEditor({
         <textarea
           value={slide.body ?? ""}
           onChange={(e) => onChange({ ...slide, body: e.target.value || undefined })}
-          placeholder="Body (optional)"
+          placeholder="Corpo (opcional)"
           rows={3}
           className="w-full text-sm text-[#777] font-light border border-[#E5E5E5] rounded-lg px-3 py-2 resize-none focus:outline-none focus:border-[#FC0100] transition leading-relaxed"
         />
@@ -180,14 +180,14 @@ export function IdeaCard({ idea, onApprove, onReject, isSaving }: IdeaCardProps)
           <div className="flex items-center gap-2 shrink-0">
             {hasEdits && !isApproved && (
               <span className="text-[9px] font-medium uppercase tracking-widest text-[#FC0100] bg-[#FC0100]/8 px-1.5 py-0.5 rounded">
-                edited
+                editado
               </span>
             )}
             {isApproved && (
-              <span className="text-[10px] font-medium uppercase tracking-widest text-white/80">Approved</span>
+              <span className="text-[10px] font-medium uppercase tracking-widest text-white/80">Aprovado</span>
             )}
             {isRejected && (
-              <span className="text-[10px] font-medium uppercase tracking-widest text-[#A0A0A0]">Rejected</span>
+              <span className="text-[10px] font-medium uppercase tracking-widest text-[#A0A0A0]">Rejeitado</span>
             )}
           </div>
         </div>
@@ -217,7 +217,7 @@ export function IdeaCard({ idea, onApprove, onReject, isSaving }: IdeaCardProps)
               <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5v-4m0 4h-4m4 0l-5-5" />
               </svg>
-              {hasEdits ? "Review edits" : "Expand"}
+              {hasEdits ? "Ver edições" : "Expandir"}
             </button>
           </div>
         </div>
@@ -234,15 +234,15 @@ export function IdeaCard({ idea, onApprove, onReject, isSaving }: IdeaCardProps)
                 {isSaving ? (
                   <>
                     <div className="w-3.5 h-3.5 border border-white border-t-transparent rounded-full animate-spin" />
-                    Saving…
+                    Salvando…
                   </>
-                ) : "Approve"}
+                ) : "Aprovar"}
               </button>
               <button
                 onClick={onReject}
                 disabled={isSaving}
                 className="px-3 py-2.5 border border-[#E5E5E5] text-[#A0A0A0] text-sm hover:border-[#FC0100] hover:text-[#FC0100] transition-all duration-200 disabled:opacity-40 rounded-xl"
-                title="Reject"
+                title="Rejeitar"
               >
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -255,7 +255,7 @@ export function IdeaCard({ idea, onApprove, onReject, isSaving }: IdeaCardProps)
               onClick={handleApprove}
               className="text-xs text-[#A0A0A0] hover:text-black transition font-light underline underline-offset-2"
             >
-              Revert
+              Restaurar
             </button>
           )}
         </div>
@@ -283,10 +283,10 @@ export function IdeaCard({ idea, onApprove, onReject, isSaving }: IdeaCardProps)
                     <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                       <path strokeLinecap="round" strokeLinejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487z" />
                     </svg>
-                    Edit
+                    Editar
                   </button>
                 ) : (
-                  <span className="text-xs text-[#FC0100] font-medium">Editing</span>
+                  <span className="text-xs text-[#FC0100] font-medium">Editando</span>
                 )}
                 {!editMode && (
                   <button
@@ -321,27 +321,27 @@ export function IdeaCard({ idea, onApprove, onReject, isSaving }: IdeaCardProps)
                   ))}
 
                   <div className="pt-4 pb-2 space-y-3">
-                    <p className="text-[9px] font-medium text-[#A0A0A0] uppercase tracking-widest">Caption</p>
+                    <p className="text-[9px] font-medium text-[#A0A0A0] uppercase tracking-widest">Legenda</p>
                     <textarea
                       value={workingCaption}
                       onChange={(e) => setWorkingCaption(e.target.value)}
                       rows={4}
-                      placeholder="Instagram caption"
+                      placeholder="Legenda do Instagram"
                       className="w-full text-sm text-[#474747] font-light border border-[#E5E5E5] rounded-lg px-3 py-2 resize-none focus:outline-none focus:border-[#FC0100] transition leading-relaxed"
                     />
-                    <p className="text-[9px] font-medium text-[#A0A0A0] uppercase tracking-widest">Visual description</p>
+                    <p className="text-[9px] font-medium text-[#A0A0A0] uppercase tracking-widest">Descrição visual</p>
                     <textarea
                       value={workingVisual}
                       onChange={(e) => setWorkingVisual(e.target.value)}
                       rows={3}
-                      placeholder="Visual direction for the designer"
+                      placeholder="Direção visual para o designer"
                       className="w-full text-sm text-[#474747] font-light border border-[#E5E5E5] rounded-lg px-3 py-2 resize-none focus:outline-none focus:border-[#FC0100] transition leading-relaxed"
                     />
-                    <p className="text-[9px] font-medium text-[#A0A0A0] uppercase tracking-widest">Logo usage</p>
+                    <p className="text-[9px] font-medium text-[#A0A0A0] uppercase tracking-widest">Uso do logo</p>
                     <input
                       value={workingLogo}
                       onChange={(e) => setWorkingLogo(e.target.value)}
-                      placeholder="Logo placement instruction"
+                      placeholder="Instrução de posicionamento do logo"
                       className="w-full text-sm text-[#474747] font-light border border-[#E5E5E5] rounded-lg px-3 py-2 focus:outline-none focus:border-[#FC0100] transition"
                     />
                   </div>
@@ -357,19 +357,19 @@ export function IdeaCard({ idea, onApprove, onReject, isSaving }: IdeaCardProps)
                     <div className="mt-4 pt-4 border-t border-[#F0F0F0] space-y-4 pb-2">
                       {current.caption && (
                         <div>
-                          <p className="text-[9px] font-medium text-[#A0A0A0] uppercase tracking-widest mb-1.5">Caption</p>
+                          <p className="text-[9px] font-medium text-[#A0A0A0] uppercase tracking-widest mb-1.5">Legenda</p>
                           <p className="text-sm text-[#474747] font-light leading-relaxed whitespace-pre-wrap">{current.caption}</p>
                         </div>
                       )}
                       {current.visualDescription && (
                         <div>
-                          <p className="text-[9px] font-medium text-[#A0A0A0] uppercase tracking-widest mb-1.5">Visual description</p>
+                          <p className="text-[9px] font-medium text-[#A0A0A0] uppercase tracking-widest mb-1.5">Descrição visual</p>
                           <p className="text-sm text-[#777] font-light leading-relaxed">{current.visualDescription}</p>
                         </div>
                       )}
                       {current.logoUsage && (
                         <div>
-                          <p className="text-[9px] font-medium text-[#A0A0A0] uppercase tracking-widest mb-1.5">Logo usage</p>
+                          <p className="text-[9px] font-medium text-[#A0A0A0] uppercase tracking-widest mb-1.5">Uso do logo</p>
                           <p className="text-sm text-[#777] font-light leading-relaxed">{current.logoUsage}</p>
                         </div>
                       )}
@@ -387,13 +387,13 @@ export function IdeaCard({ idea, onApprove, onReject, isSaving }: IdeaCardProps)
                     onClick={saveEdits}
                     className="flex-1 py-2.5 bg-black text-white text-sm font-medium hover:bg-[#222] transition rounded-xl"
                   >
-                    Save changes
+                    Salvar alterações
                   </button>
                   <button
                     onClick={cancelEdits}
                     className="px-4 py-2.5 border border-[#E5E5E5] text-sm text-[#A0A0A0] hover:text-black hover:border-black transition rounded-xl"
                   >
-                    Cancel
+                    Cancelar
                   </button>
                 </div>
               ) : idea.status === "pending" ? (
@@ -403,7 +403,7 @@ export function IdeaCard({ idea, onApprove, onReject, isSaving }: IdeaCardProps)
                     disabled={isSaving}
                     className="flex-1 py-2.5 bg-[#FC0100] text-white text-sm font-medium hover:bg-[#D40000] transition-all duration-200 disabled:opacity-40 disabled:cursor-not-allowed rounded-xl"
                   >
-                    Approve{hasEdits ? " edited version" : ""}
+                    Aprovar{hasEdits ? " versão editada" : ""}
                   </button>
                   <button
                     onClick={() => { setExpanded(false); onReject(); }}

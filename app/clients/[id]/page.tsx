@@ -97,7 +97,7 @@ export default function ClientPage() {
             }),
           });
           const json = await res.json();
-          if (!res.ok) throw new Error(json.error || "Generation failed");
+          if (!res.ok) throw new Error(json.error || "Falha na geração");
           return {
             id: crypto.randomUUID(),
             userIdea: brief.idea,
@@ -108,7 +108,7 @@ export default function ClientPage() {
             status: "pending",
           } as Idea;
         } catch (err) {
-          return { _error: err instanceof Error ? err.message : "Failed", userIdea: brief.idea };
+          return { _error: err instanceof Error ? err.message : "Falha", userIdea: brief.idea };
         }
       })
     );
@@ -118,7 +118,7 @@ export default function ClientPage() {
 
     setPosts(succeeded);
     if (failed.length > 0) {
-      setError(`Failed to generate ${failed.length} post(s): ${failed.map((f) => `"${f.userIdea}"`).join(", ")}`);
+      setError(`Falha ao gerar ${failed.length} post(s): ${failed.map((f) => `"${f.userIdea}"`).join(", ")}`);
     }
     setGenerating(false);
   }, [client, filledBriefs, mode, templateId]);
@@ -150,11 +150,11 @@ export default function ClientPage() {
         setSavedPostIds((prev) => ({ ...prev, [idea.id]: savedId }));
       } else {
         const saveJson = await saveRes.json().catch(() => ({}));
-        setError(`Post approved but failed to save for Figma plugin: ${saveJson.error || saveRes.status}`);
+        setError(`Post aprovado, mas falha ao salvar para o plugin Figma: ${saveJson.error || saveRes.status}`);
       }
     } catch (err) {
       setPosts((prev) => prev.map((p) => p.id === idea.id ? { ...p, status: "pending" } : p));
-      setError(err instanceof Error ? err.message : "Failed to save post");
+      setError(err instanceof Error ? err.message : "Erro ao salvar post");
     } finally {
       setSavingPostFor(null);
     }
@@ -222,7 +222,7 @@ export default function ClientPage() {
             <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
             </svg>
-            Clients
+            Clientes
           </Link>
 
           <div className="h-4 w-px bg-[#E5E5E5]" />
@@ -253,7 +253,7 @@ export default function ClientPage() {
               href={`/library?clientId=${id}`}
               className="shrink-0 flex items-center gap-2 px-5 py-2.5 bg-[#FC0100] text-white text-sm font-medium rounded-2xl shadow-[0_6px_20px_rgba(0,0,0,0.08)] hover:bg-[#D40000] hover:shadow-[0_8px_28px_rgba(0,0,0,0.13)] hover:-translate-y-px transition-all duration-200"
             >
-              View history
+              Ver histórico
               <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
               </svg>
@@ -284,7 +284,7 @@ export default function ClientPage() {
                     onClick={() => setTagsExpanded(true)}
                     className="text-xs text-[#A0A0A0] hover:text-black font-light transition"
                   >
-                    +{overflowCount} more
+                    +{overflowCount} mais
                   </button>
                 )}
               </div>
@@ -301,7 +301,7 @@ export default function ClientPage() {
                         onClick={() => setContextExpanded(false)}
                         className="ml-2 text-[#A0A0A0] hover:text-black transition whitespace-nowrap"
                       >
-                        Show less
+                        Ver menos
                       </button>
                     )}
                   </>
@@ -312,7 +312,7 @@ export default function ClientPage() {
                       onClick={() => setContextExpanded(true)}
                       className="text-[#A0A0A0] hover:text-black transition whitespace-nowrap"
                     >
-                      View full context
+                      Ver contexto completo
                     </button>
                   </>
                 )}
@@ -345,16 +345,16 @@ export default function ClientPage() {
                 className="text-2xl text-[#111] tracking-[-0.04em]"
                 style={{ fontFamily: "'Imbue', serif", fontWeight: 300 }}
               >
-                Creative briefs
+                Briefings
               </h2>
               <p className="text-sm text-[#666] font-light mt-2">
-                Describe each post in your own words — topic, angle, audience, goal, or references. The AI will structure the rest.
+                Descreva cada post com suas palavras — tema, ângulo, público, objetivo ou referências. A IA cuida do resto.
               </p>
             </div>
 
             {/* Mode selector */}
             <div className="shrink-0">
-              <p className="text-[10px] font-medium text-[#A0A0A0] uppercase tracking-widest mb-2">Mode</p>
+              <p className="text-[10px] font-medium text-[#A0A0A0] uppercase tracking-widest mb-2">Modo</p>
               <div className="flex border border-[#E5E5E5] rounded-xl overflow-hidden">
                 <button
                   onClick={() => setMode("fast")}
@@ -362,7 +362,7 @@ export default function ClientPage() {
                     mode === "fast" ? "bg-black text-white" : "text-[#474747] hover:text-black"
                   }`}
                 >
-                  Fast
+                  Rápido
                 </button>
                 <button
                   onClick={() => setMode("quality")}
@@ -370,11 +370,11 @@ export default function ClientPage() {
                     mode === "quality" ? "bg-black text-white" : "text-[#474747] hover:text-black"
                   }`}
                 >
-                  Quality
+                  Qualidade
                 </button>
               </div>
               <p className="text-[10px] text-[#C0C0C0] font-light mt-1.5">
-                {mode === "fast" ? "Faster · lower cost" : "Better writing"}
+                {mode === "fast" ? "Mais rápido · menor custo" : "Melhor escrita"}
               </p>
             </div>
           </div>
@@ -391,13 +391,13 @@ export default function ClientPage() {
                 {/* Card header */}
                 <div className="flex items-center justify-between px-4 pt-3 pb-1">
                   <span className="text-[10px] font-medium text-[#A0A0A0] uppercase tracking-widest">
-                    Brief {index + 1}
+                    Briefing {index + 1}
                   </span>
                   {briefs.length > 1 && (
                     <button
                       onClick={() => removeBrief(index)}
                       className="w-6 h-6 flex items-center justify-center text-[#C0C0C0] hover:text-[#FC0100] transition"
-                      title="Remove brief"
+                      title="Remover briefing"
                     >
                       <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                         <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -410,7 +410,7 @@ export default function ClientPage() {
                 <textarea
                   value={brief.idea}
                   onChange={(e) => updateBrief(index, "idea", e.target.value)}
-                  placeholder="Describe the post — topic, angle, audience, goal, or anything that sets the direction. The more context you give, the better the output."
+                  placeholder="Descreva o post — tema, ângulo, público, objetivo ou qualquer coisa que oriente a criação. Quanto mais contexto, melhor o resultado."
                   rows={4}
                   className="w-full px-4 py-2 text-sm text-black placeholder-[#D5D5D5] font-light bg-transparent resize-none focus:outline-none leading-relaxed"
                 />
@@ -431,14 +431,14 @@ export default function ClientPage() {
                     >
                       <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
                     </svg>
-                    {brief.reference ? "Reference added" : "Add reference (optional)"}
+                    {brief.reference ? "Referência adicionada" : "Adicionar referência (opcional)"}
                   </button>
 
                   {expandedRef[index] && (
                     <textarea
                       value={brief.reference}
                       onChange={(e) => updateBrief(index, "reference", e.target.value)}
-                      placeholder="Paste an example caption, a post you admire, or a tone/style reference. The AI will use it as inspiration — not copy it."
+                      placeholder="Cole uma legenda de exemplo, um post que você admira ou uma referência de tom/estilo. A IA vai usar como inspiração — não copiar."
                       rows={3}
                       className="mt-2 w-full text-sm text-[#474747] placeholder-[#D5D5D5] font-light bg-transparent resize-none focus:outline-none leading-relaxed border border-dashed border-[#E5E5E5] px-3 py-2"
                     />
@@ -457,7 +457,7 @@ export default function ClientPage() {
               <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
               </svg>
-              Add brief {briefs.length < 5 ? `(${5 - briefs.length} remaining)` : "(max 5)"}
+              Adicionar briefing {briefs.length < 5 ? `(${5 - briefs.length} restante${5 - briefs.length !== 1 ? "s" : ""})` : "(máx 5)"}
             </button>
 
             {filledBriefs.length > 0 && (
@@ -469,10 +469,10 @@ export default function ClientPage() {
                 {generating ? (
                   <>
                     <div className="w-3.5 h-3.5 border border-white border-t-transparent rounded-full animate-spin" />
-                    Generating…
+                    Gerando…
                   </>
                 ) : (
-                  <>Generate {filledBriefs.length === 1 ? "post" : `${filledBriefs.length} posts`}</>
+                  <>Gerar {filledBriefs.length === 1 ? "post" : `${filledBriefs.length} posts`}</>
                 )}
               </button>
             )}
@@ -505,7 +505,7 @@ export default function ClientPage() {
                 className="text-2xl text-[#111] tracking-[-0.04em]"
                 style={{ fontFamily: "'Imbue', serif", fontWeight: 300 }}
               >
-                Generated posts
+                Posts gerados
                 <span className="ml-3 text-sm font-light text-[#A0A0A0]" style={{ fontFamily: "'Inter', sans-serif" }}>
                   ({posts.length})
                 </span>
@@ -517,7 +517,7 @@ export default function ClientPage() {
                 <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
                 </svg>
-                Regenerate all
+                Regenerar tudo
               </button>
             </div>
 
@@ -555,9 +555,9 @@ export default function ClientPage() {
                 className="text-2xl text-[#111] tracking-[-0.04em]"
                 style={{ fontFamily: "'Imbue', serif", fontWeight: 300 }}
               >
-                Write your first brief above
+                Escreva o seu primeiro briefing acima
               </h2>
-              <p className="mt-2 text-sm text-[#888] font-light">Describe the topic, angle, or goal — then generate.</p>
+              <p className="mt-2 text-sm text-[#888] font-light">Descreva o tema, ângulo ou objetivo — e depois gere.</p>
             </div>
           </div>
         )}

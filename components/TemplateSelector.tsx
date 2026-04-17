@@ -77,7 +77,7 @@ export function TemplateSelector({ selected, onChange }: TemplateSelectorProps) 
   return (
     <div className="space-y-2">
       <p className="text-[10px] font-medium text-[#A0A0A0] uppercase tracking-widest">
-        Carousel template
+        Modelo de carrossel
       </p>
       <div className="grid grid-cols-3 gap-3">
         {TEMPLATES.map((t) => (

@@ -12,14 +12,14 @@ interface CarouselPreviewProps {
 }
 
 const SLIDE_LABELS: Record<SlideType, string> = {
-  hook: "Hook",
-  context: "Context",
-  problem: "Problem",
+  hook: "Gancho",
+  context: "Contexto",
+  problem: "Problema",
   insight: "Insight",
   cta: "CTA",
 };
 
-// Resolve the display label: prefer the template's custom label (e.g. "Tension", "Setup")
+// Resolve the display label: prefer the template's custom label (e.g. "Tensão", "Contexto")
 // over the generic slide type label.
 function resolveLabel(slide: CarouselSlide, index: number, templateId?: string): string {
   if (templateId) {
@@ -128,7 +128,7 @@ export function CarouselPreview({ post, clientName: _clientName, savedPostId, te
         <div className="px-5 pt-5">
           <div className="border border-[#E5E5E5] px-4 py-4">
             <p className="text-[9px] font-medium text-[#A0A0A0] uppercase tracking-widest mb-2">
-              Figma plugin — post ID
+              Plugin Figma — ID do post
             </p>
             <p className="text-xs font-mono text-black break-all mb-3 leading-relaxed">{savedPostId}</p>
             <div className="flex gap-2">
@@ -141,9 +141,9 @@ export function CarouselPreview({ post, clientName: _clientName, savedPostId, te
                     <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                       <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                     </svg>
-                    Copied
+                    Copiado
                   </>
-                ) : "Copy ID"}
+                ) : "Copiar ID"}
               </button>
               {figmaFileKey && (
                 <a
@@ -152,7 +152,7 @@ export function CarouselPreview({ post, clientName: _clientName, savedPostId, te
                   rel="noopener noreferrer"
                   className="flex items-center gap-1.5 px-3 py-1.5 border border-[#E5E5E5] hover:border-[#FC0100] text-[#474747] text-xs font-medium transition"
                 >
-                  Open in Figma
+                  Abrir no Figma
                 </a>
               )}
             </div>
@@ -170,7 +170,7 @@ export function CarouselPreview({ post, clientName: _clientName, savedPostId, te
             onClick={copyAll}
             className="text-xs text-[#A0A0A0] hover:text-black font-light transition"
           >
-            {copied ? "Copied" : "Copy all"}
+            {copied ? "Copiado" : "Copiar tudo"}
           </button>
         </div>
 
@@ -184,8 +184,8 @@ export function CarouselPreview({ post, clientName: _clientName, savedPostId, te
         {post.caption && (
           <div className="border border-[#E5E5E5] px-4 py-3">
             <div className="flex items-center justify-between mb-2">
-              <p className="text-[9px] font-medium text-[#A0A0A0] uppercase tracking-widest">Instagram caption</p>
-              <span className="text-[9px] text-[#C0C0C0] font-light uppercase tracking-widest">not sent to Figma</span>
+              <p className="text-[9px] font-medium text-[#A0A0A0] uppercase tracking-widest">Legenda do Instagram</p>
+              <span className="text-[9px] text-[#C0C0C0] font-light uppercase tracking-widest">não enviado ao Figma</span>
             </div>
             <p className="text-sm text-black font-light whitespace-pre-line leading-relaxed">{post.caption}</p>
           </div>
@@ -193,7 +193,7 @@ export function CarouselPreview({ post, clientName: _clientName, savedPostId, te
 
         <div className="border border-dashed border-[#E5E5E5] px-4 py-3">
           <p className="text-[9px] font-medium text-[#A0A0A0] uppercase tracking-widest mb-1.5">
-            Visual direction · designer only
+            Direção visual · somente designer
           </p>
           <p className="text-sm text-[#474747] font-light italic leading-relaxed">{post.visualDescription}</p>
           {post.logoUsage && (

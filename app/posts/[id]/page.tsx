@@ -36,7 +36,7 @@ export default async function PostDetailPage({ params }: { params: Promise<{ id:
           </Link>
           <div className="h-4 w-px bg-[#E5E5E5]" />
           <p className="text-sm text-[#A0A0A0] font-light truncate">
-            {post.title || "Untitled post"}
+            {post.title || "Post sem título"}
           </p>
         </div>
       </header>

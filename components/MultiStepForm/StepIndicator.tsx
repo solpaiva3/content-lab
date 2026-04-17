@@ -1,6 +1,6 @@
 "use client";
 
-const STEPS = ["Identity", "Tone", "Visual", "Review"];
+const STEPS = ["Identidade", "Tom", "Visual", "Revisão"];
 
 interface StepIndicatorProps {
   currentStep: number;

@@ -35,7 +35,7 @@ export default async function DashboardPage() {
               <svg className="w-3.5 h-3.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M3 7h18M3 12h18M3 17h18" />
               </svg>
-              Library
+              Biblioteca
             </Link>
             <Link
               href="/clients/new"
@@ -44,14 +44,14 @@ export default async function DashboardPage() {
               <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
               </svg>
-              New client
+              Novo cliente
             </Link>
             <a
               href="/api/logout"
               className="text-xs text-neutral-400 font-light hover:text-neutral-700 transition-colors"
-              title="Sign out"
+              title="Sair"
             >
-              Sign out
+              Sair
             </a>
           </div>
         </div>
@@ -71,15 +71,15 @@ export default async function DashboardPage() {
                 className="text-2xl text-black tracking-[-0.04em]"
                 style={{ fontFamily: "'Imbue', serif", fontWeight: 300 }}
               >
-                No clients yet
+                Nenhum cliente ainda
               </h2>
-              <p className="text-sm text-[#A0A0A0] font-light">Start by registering your first client.</p>
+              <p className="text-sm text-[#A0A0A0] font-light">Comece cadastrando o seu primeiro cliente.</p>
             </div>
             <Link
               href="/clients/new"
               className="px-5 py-2.5 bg-[#FC0100] text-white text-sm font-medium rounded-2xl shadow-[0_6px_20px_rgba(0,0,0,0.08)] hover:bg-[#D40000] hover:shadow-[0_8px_28px_rgba(0,0,0,0.13)] hover:-translate-y-px transition-all duration-200"
             >
-              Register client
+              Cadastrar cliente
             </Link>
           </div>
         ) : (
@@ -90,10 +90,10 @@ export default async function DashboardPage() {
                   className="text-3xl text-black tracking-[-0.04em]"
                   style={{ fontFamily: "'Imbue', serif", fontWeight: 300 }}
                 >
-                  Clients
+                  Clientes
                 </h1>
                 <p className="mt-1 text-sm text-[#A0A0A0] font-light">
-                  {clients.length} client{clients.length !== 1 ? "s" : ""} registered
+                  {clients.length} cliente{clients.length !== 1 ? "s" : ""} cadastrado{clients.length !== 1 ? "s" : ""}
                 </p>
               </div>
             </div>

@@ -25,7 +25,7 @@ function slideCount(slidesJson: string): number {
 }
 
 function formatDate(d: Date | string): string {
-  return new Date(d).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
+  return new Date(d).toLocaleDateString("pt-BR", { day: "numeric", month: "short", year: "numeric" });
 }
 
 function templateName(id: string): string {
@@ -47,13 +47,13 @@ export function LibraryClient({ posts, clients, templates, initialClientId = "" 
       {/* Filters */}
       <div className="flex items-center gap-3 flex-wrap">
         <div className="flex items-center gap-2">
-          <span className="text-[10px] font-medium text-[#A0A0A0] uppercase tracking-widest">Client</span>
+          <span className="text-[10px] font-medium text-[#A0A0A0] uppercase tracking-widest">Cliente</span>
           <select
             value={clientFilter}
             onChange={(e) => setClientFilter(e.target.value)}
             className="border border-[#E5E5E5] rounded-xl px-3 py-1.5 text-xs text-black font-light focus:outline-none focus:border-[#FC0100] transition bg-white"
           >
-            <option value="">All clients</option>
+            <option value="">Todos os clientes</option>
             {clients.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
           </select>
         </div>
@@ -65,7 +65,7 @@ export function LibraryClient({ posts, clients, templates, initialClientId = "" 
             onChange={(e) => setTemplateFilter(e.target.value)}
             className="border border-[#E5E5E5] rounded-xl px-3 py-1.5 text-xs text-black font-light focus:outline-none focus:border-[#FC0100] transition bg-white"
           >
-            <option value="">All templates</option>
+            <option value="">Todos os templates</option>
             {templates.map((t) => <option key={t.id} value={t.id}>{t.name}</option>)}
           </select>
         </div>
@@ -75,7 +75,7 @@ export function LibraryClient({ posts, clients, templates, initialClientId = "" 
             onClick={() => { setClientFilter(""); setTemplateFilter(""); }}
             className="text-xs text-[#A0A0A0] hover:text-[#FC0100] font-light transition"
           >
-            Clear filters
+            Limpar filtros
           </button>
         )}
 
@@ -90,7 +90,7 @@ export function LibraryClient({ posts, clients, templates, initialClientId = "" 
           <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
             <polygon points="16,2 30,30 2,30" stroke="#E5E5E5" strokeWidth="1" fill="none" />
           </svg>
-          <p className="text-sm text-[#A0A0A0] font-light">No posts match the current filters.</p>
+          <p className="text-sm text-[#A0A0A0] font-light">Nenhum post encontrado com os filtros atuais.</p>
         </div>
       ) : (
         <div className="rounded-2xl overflow-hidden shadow-[0_8px_30px_rgba(0,0,0,0.06)] border border-[#E5E5E5] divide-y divide-[#E5E5E5]">
@@ -107,7 +107,7 @@ export function LibraryClient({ posts, clients, templates, initialClientId = "" 
                     className="text-sm text-black tracking-tight leading-tight truncate group-hover:text-[#FC0100] transition"
                     style={{ fontFamily: "'Imbue', serif", fontWeight: 300 }}
                   >
-                    {post.title || "Untitled"}
+                    {post.title || "Sem título"}
                   </p>
                   <p className="text-xs text-[#A0A0A0] font-light">{post.client.name}</p>
                 </div>

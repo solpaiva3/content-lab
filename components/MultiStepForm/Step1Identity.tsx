@@ -19,21 +19,21 @@ export function Step1Identity({ data, onChange, errors }: Step1IdentityProps) {
           className="text-2xl text-black tracking-[-0.04em]"
           style={{ fontFamily: "'Imbue', serif", fontWeight: 300 }}
         >
-          Client identity
+          Identidade do cliente
         </h2>
-        <p className="mt-1 text-sm text-[#A0A0A0] font-light">Basic information about the client.</p>
+        <p className="mt-1 text-sm text-[#A0A0A0] font-light">Informações básicas sobre o cliente.</p>
       </div>
 
       <div className="space-y-5">
         <div>
           <label className="block text-xs font-medium text-[#474747] uppercase tracking-widest mb-2">
-            Client name <span className="text-[#FC0100]">*</span>
+            Nome do cliente <span className="text-[#FC0100]">*</span>
           </label>
           <input
             type="text"
             value={data.name}
             onChange={(e) => onChange({ name: e.target.value })}
-            placeholder="e.g. Bloom Studio"
+            placeholder="ex.: Bloom Studio"
             className={`w-full px-4 py-3 border bg-white text-black placeholder-[#C0C0C0] text-sm font-light focus:outline-none focus:ring-1 focus:ring-[#FC0100] transition ${
               errors.name ? "border-[#FC0100]" : "border-[#E5E5E5]"
             }`}
@@ -43,13 +43,13 @@ export function Step1Identity({ data, onChange, errors }: Step1IdentityProps) {
 
         <div>
           <label className="block text-xs font-medium text-[#474747] uppercase tracking-widest mb-2">
-            Industry / Niche <span className="text-[#FC0100]">*</span>
+            Setor / Nicho <span className="text-[#FC0100]">*</span>
           </label>
           <input
             type="text"
             value={data.sector}
             onChange={(e) => onChange({ sector: e.target.value })}
-            placeholder="e.g. Sustainable fashion, Artisan bakery, Tech startup…"
+            placeholder="ex.: Moda sustentável, Padaria artesanal, Startup de tecnologia…"
             className={`w-full px-4 py-3 border bg-white text-black placeholder-[#C0C0C0] text-sm font-light focus:outline-none focus:ring-1 focus:ring-[#FC0100] transition ${
               errors.sector ? "border-[#FC0100]" : "border-[#E5E5E5]"
             }`}

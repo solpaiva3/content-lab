@@ -120,14 +120,14 @@ function LogoUploader({
         ) : uploading ? (
           <div className="flex flex-col items-center gap-1 text-[#A0A0A0]">
             <div className="w-4 h-4 border border-[#FC0100] border-t-transparent rounded-full animate-spin" />
-            <span className="text-xs font-light">Uploading…</span>
+            <span className="text-xs font-light">Enviando…</span>
           </div>
         ) : (
           <div className="flex flex-col items-center gap-1 text-[#C0C0C0]">
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
             </svg>
-            <span className="text-xs font-light">PNG, SVG or JPG</span>
+            <span className="text-xs font-light">PNG, SVG ou JPG</span>
           </div>
         )}
         <input
@@ -144,14 +144,14 @@ function LogoUploader({
 
       {/* Hint — always visible */}
       {!dims && !uploadError && (
-        <p className="text-[10px] text-[#C0C0C0] font-light">Max recommended: 4000 × 4000 px</p>
+        <p className="text-[10px] text-[#C0C0C0] font-light">Máx. recomendado: 4000 × 4000 px</p>
       )}
 
       {/* Dimensions after upload */}
       {dims && !uploadError && (
         isOversized ? (
           <p className="text-xs text-[#FC0100]">
-            {dims.w} × {dims.h} px — large image, may fail in Figma
+            {dims.w} × {dims.h} px — imagem grande, pode falhar no Figma
           </p>
         ) : (
           <p className="text-[10px] text-[#A0A0A0] font-light">{dims.w} × {dims.h} px</p>
@@ -166,7 +166,7 @@ function LogoUploader({
           onClick={() => setBgDark(!bgDark)}
           className="text-xs text-[#A0A0A0] hover:text-black transition font-light"
         >
-          Toggle {bgDark ? "light" : "dark"} background
+          Alternar fundo {bgDark ? "claro" : "escuro"}
         </button>
       )}
     </div>
@@ -208,7 +208,7 @@ function ColorSwatch({
         type="button"
         onClick={onRemove}
         className="text-[#C0C0C0] hover:text-[#FC0100] text-xs transition"
-        title={`Remove color ${index + 1}`}
+        title={`Remover cor ${index + 1}`}
       >
         ×
       </button>
@@ -272,14 +272,14 @@ function FontUploader({
 
   return (
     <div className="space-y-2">
-      <label className="block text-xs text-[#474747] font-medium uppercase tracking-widest capitalize">
-        {role} font
+      <label className="block text-xs text-[#474747] font-medium uppercase tracking-widest">
+        Fonte {role === "primary" ? "primária" : "secundária"}
       </label>
       <input
         type="text"
         value={fontName}
         onChange={(e) => onNameChange(e.target.value)}
-        placeholder={role === "primary" ? "e.g. Imbue" : "e.g. Inter"}
+        placeholder={role === "primary" ? "ex.: Imbue" : "ex.: Inter"}
         className="w-full px-3 py-2.5 border border-[#E5E5E5] bg-white text-sm text-black placeholder-[#C0C0C0] font-light focus:outline-none focus:ring-1 focus:ring-[#FC0100] transition"
       />
       <div
@@ -297,7 +297,7 @@ function FontUploader({
         {uploading ? (
           <div className="flex items-center gap-2 text-[#A0A0A0] text-xs font-light">
             <div className="w-3.5 h-3.5 border border-[#FC0100] border-t-transparent rounded-full animate-spin" />
-            Uploading…
+            Enviando…
           </div>
         ) : fileUrl ? (
           <div className="flex items-center gap-2 text-black text-xs px-3 font-light">
@@ -311,7 +311,7 @@ function FontUploader({
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
             </svg>
-            <span className="text-xs font-light">TTF, OTF, WOFF or WOFF2</span>
+            <span className="text-xs font-light">TTF, OTF, WOFF ou WOFF2</span>
           </div>
         )}
         <input
@@ -354,9 +354,9 @@ export function Step3Visual({ data, onChange }: Step3VisualProps) {
           className="text-2xl text-black tracking-[-0.04em]"
           style={{ fontFamily: "'Imbue', serif", fontWeight: 300 }}
         >
-          Visual identity
+          Identidade visual
         </h2>
-        <p className="mt-1 text-sm text-[#A0A0A0] font-light">Logo, color palette and typography.</p>
+        <p className="mt-1 text-sm text-[#A0A0A0] font-light">Logo, paleta de cores e tipografia.</p>
       </div>
 
       {/* Logo */}
@@ -364,19 +364,19 @@ export function Step3Visual({ data, onChange }: Step3VisualProps) {
         <p className="text-xs font-medium text-[#474747] uppercase tracking-widest mb-4">Logo</p>
         <div className="grid grid-cols-3 gap-4">
           <LogoUploader
-            label="Main"
+            label="Principal"
             variant="main"
             currentUrl={data.logoUrl}
             onUploaded={(url) => onChange({ logoUrl: url })}
           />
           <LogoUploader
-            label="Light bg"
+            label="Fundo claro"
             variant="light"
             currentUrl={data.logoVariants.light || ""}
             onUploaded={(url) => onChange({ logoVariants: { ...data.logoVariants, light: url } })}
           />
           <LogoUploader
-            label="Dark bg"
+            label="Fundo escuro"
             variant="dark"
             currentUrl={data.logoVariants.dark || ""}
             onUploaded={(url) => onChange({ logoVariants: { ...data.logoVariants, dark: url } })}
@@ -387,8 +387,8 @@ export function Step3Visual({ data, onChange }: Step3VisualProps) {
       {/* Colors */}
       <div>
         <p className="text-xs font-medium text-[#474747] uppercase tracking-widest mb-4">
-          Color palette
-          <span className="text-[#A0A0A0] font-light normal-case ml-1">(up to 6)</span>
+          Paleta de cores
+          <span className="text-[#A0A0A0] font-light normal-case ml-1">(até 6)</span>
         </p>
         <div className="flex flex-wrap items-end gap-3">
           {data.colors.map((color, i) => (
@@ -421,7 +421,7 @@ export function Step3Visual({ data, onChange }: Step3VisualProps) {
 
       {/* Typography */}
       <div>
-        <p className="text-xs font-medium text-[#474747] uppercase tracking-widest mb-4">Typography</p>
+        <p className="text-xs font-medium text-[#474747] uppercase tracking-widest mb-4">Tipografia</p>
         <div className="grid grid-cols-2 gap-6">
           {(["primary", "secondary"] as const).map((role) => (
             <FontUploader

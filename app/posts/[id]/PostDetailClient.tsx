@@ -31,7 +31,7 @@ interface Props {
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
 const SLIDE_LABELS: Record<SlideType, string> = {
-  hook: "Hook", context: "Context", problem: "Problem", insight: "Insight", cta: "CTA",
+  hook: "Gancho", context: "Contexto", problem: "Problema", insight: "Insight", cta: "CTA",
 };
 
 function resolveLabel(slide: CarouselSlide, index: number, template: CarouselTemplate | null): string {
@@ -46,7 +46,7 @@ function resolveLayout(slide: CarouselSlide, index: number, template: CarouselTe
 }
 
 function formatDate(iso: string): string {
-  return new Date(iso).toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" });
+  return new Date(iso).toLocaleDateString("pt-BR", { day: "numeric", month: "long", year: "numeric" });
 }
 
 // ── Primitive edit inputs ─────────────────────────────────────────────────────
@@ -129,7 +129,7 @@ function SlideEditor({
         <span className="text-[9px] font-medium text-[#A0A0A0] uppercase tracking-widest">{index + 1}</span>
         <span className="text-[9px] text-[#D0D0D0]">—</span>
         <span className="text-[9px] font-medium text-[#474747] uppercase tracking-widest">{label}</span>
-        <span className="ml-auto text-[9px] text-[#D0D0D0] font-light">click to edit</span>
+        <span className="ml-auto text-[9px] text-[#D0D0D0] font-light">clique para editar</span>
       </div>
       <div className="px-5 py-4 space-y-3">
         <EditableField
@@ -227,7 +227,7 @@ export function PostDetailClient({ post, client: _client, template }: Props) {
             className="text-2xl text-black tracking-[-0.04em] leading-tight"
             style={{ fontFamily: "'Imbue', serif", fontWeight: 300 }}
           >
-            {slides[0]?.title || post.title || "Untitled post"}
+            {slides[0]?.title || post.title || "Post sem título"}
           </h2>
           <div className="flex items-center gap-3 flex-wrap">
             {template && (
@@ -247,24 +247,24 @@ export function PostDetailClient({ post, client: _client, template }: Props) {
           {/* Save button */}
           <div className="flex items-center gap-3">
             {saveStatus === "saved" && (
-              <span className="text-xs text-[#A0A0A0] font-light">Saved</span>
+              <span className="text-xs text-[#A0A0A0] font-light">Salvo</span>
             )}
             {saveStatus === "error" && (
-              <span className="text-xs text-[#FC0100] font-light">Error saving</span>
+              <span className="text-xs text-[#FC0100] font-light">Erro ao salvar</span>
             )}
             <button
               onClick={handleSave}
               disabled={saving || !isDirty}
               className="px-4 py-2 border border-[#E5E5E5] text-xs font-medium text-[#474747] hover:border-black hover:text-black transition-all duration-200 disabled:opacity-30 disabled:cursor-not-allowed rounded-xl"
             >
-              {saving ? "Saving…" : "Save changes"}
+              {saving ? "Salvando…" : "Salvar alterações"}
             </button>
           </div>
 
           {/* Figma plugin */}
           <div className="border border-[#E5E5E5] px-4 py-3">
             <p className="text-[9px] font-medium text-[#A0A0A0] uppercase tracking-widest mb-2">
-              Figma plugin — post ID
+              Plugin Figma — ID do post
             </p>
             <p className="text-xs font-mono text-black break-all mb-3 leading-relaxed">{post.id}</p>
             <div className="flex gap-2">
@@ -277,9 +277,9 @@ export function PostDetailClient({ post, client: _client, template }: Props) {
                     <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                       <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                     </svg>
-                    Copied
+                    Copiado
                   </>
-                ) : "Copy ID"}
+                ) : "Copiar ID"}
               </button>
               {figmaFileKey && (
                 <a
@@ -288,7 +288,7 @@ export function PostDetailClient({ post, client: _client, template }: Props) {
                   rel="noopener noreferrer"
                   className="flex items-center gap-1.5 px-3 py-1.5 border border-[#E5E5E5] hover:border-[#FC0100] text-[#474747] text-xs font-medium transition"
                 >
-                  Open Figma
+                  Abrir no Figma
                 </a>
               )}
             </div>
@@ -299,7 +299,7 @@ export function PostDetailClient({ post, client: _client, template }: Props) {
       {/* Slides */}
       <div className="space-y-3">
         <p className="text-[10px] font-medium text-[#A0A0A0] uppercase tracking-widest">
-          Carousel · {slides.length} slides
+          Carrossel · {slides.length} slides
         </p>
         {slides.map((slide, i) => (
           <SlideEditor
@@ -315,12 +315,12 @@ export function PostDetailClient({ post, client: _client, template }: Props) {
       {/* Caption */}
       <div className="border border-[#E5E5E5] px-5 py-4">
         <div className="flex items-center justify-between mb-3">
-          <p className="text-[9px] font-medium text-[#A0A0A0] uppercase tracking-widest">Instagram caption</p>
+          <p className="text-[9px] font-medium text-[#A0A0A0] uppercase tracking-widest">Legenda do Instagram</p>
           <button
             onClick={copyCaption}
             className="text-xs text-[#A0A0A0] hover:text-black font-light transition"
           >
-            {captionCopied ? "Copied" : "Copy"}
+            {captionCopied ? "Copiado" : "Copiar"}
           </button>
         </div>
         <textarea
@@ -334,7 +334,7 @@ export function PostDetailClient({ post, client: _client, template }: Props) {
       {/* Visual direction */}
       <div className="border border-dashed border-[#E5E5E5] px-5 py-4 space-y-3">
         <p className="text-[9px] font-medium text-[#A0A0A0] uppercase tracking-widest">
-          Visual direction · designer only
+          Direção visual · somente designer
         </p>
         <textarea
           value={visualDesc}
@@ -355,13 +355,13 @@ export function PostDetailClient({ post, client: _client, template }: Props) {
       {/* Floating save bar — appears when dirty */}
       {isDirty && (
         <div className="fixed bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-4 bg-white border border-[#E5E5E5] px-5 py-3 rounded-2xl shadow-[0_8px_30px_rgba(0,0,0,0.10)]">
-          <span className="text-xs text-[#A0A0A0] font-light">Unsaved changes</span>
+          <span className="text-xs text-[#A0A0A0] font-light">Alterações não salvas</span>
           <button
             onClick={handleSave}
             disabled={saving}
             className="px-4 py-1.5 bg-black text-white text-xs font-medium hover:bg-[#222] transition-all duration-200 disabled:opacity-40 rounded-lg"
           >
-            {saving ? "Saving…" : "Save changes"}
+            {saving ? "Salvando…" : "Salvar"}
           </button>
         </div>
       )}

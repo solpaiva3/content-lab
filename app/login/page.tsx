@@ -27,10 +27,10 @@ export default function LoginPage() {
         router.refresh();
       } else {
         const data = await res.json();
-        setError(data.error ?? "Login failed.");
+        setError(data.error ?? "Falha no login.");
       }
     } catch {
-      setError("Something went wrong. Try again.");
+      setError("Algo deu errado. Tente novamente.");
     } finally {
       setLoading(false);
     }
@@ -56,16 +56,16 @@ export default function LoginPage() {
           className="text-2xl text-black tracking-[-0.04em] mb-1"
           style={{ fontFamily: "'Imbue', serif", fontWeight: 300 }}
         >
-          Sign in
+          Entrar
         </h1>
         <p className="text-sm text-neutral-400 font-light mb-8">
-          Studio Latina — private access
+          Studio Latina — acesso restrito
         </p>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-1.5">
             <label className="text-[10px] font-medium text-neutral-400 uppercase tracking-widest">
-              Email
+              E-mail
             </label>
             <input
               type="email"
@@ -74,13 +74,13 @@ export default function LoginPage() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="w-full border border-[#E5E5E5] rounded-xl px-4 py-2.5 text-sm text-black font-light placeholder:text-neutral-300 focus:outline-none focus:border-[#FC0100] transition"
-              placeholder="you@example.com"
+              placeholder="voce@exemplo.com"
             />
           </div>
 
           <div className="space-y-1.5">
             <label className="text-[10px] font-medium text-neutral-400 uppercase tracking-widest">
-              Password
+              Senha
             </label>
             <input
               type="password"
@@ -102,7 +102,7 @@ export default function LoginPage() {
             disabled={loading}
             className="w-full py-2.5 bg-[#FC0100] text-white text-sm font-medium rounded-xl shadow-[0_4px_14px_rgba(252,1,0,0.25)] hover:bg-[#D40000] hover:shadow-[0_6px_20px_rgba(252,1,0,0.35)] hover:-translate-y-px transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:translate-y-0"
           >
-            {loading ? "Signing in…" : "Sign in"}
+            {loading ? "Entrando…" : "Entrar"}
           </button>
         </form>
       </div>

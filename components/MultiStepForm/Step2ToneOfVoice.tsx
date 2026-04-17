@@ -61,48 +61,48 @@ export function Step2ToneOfVoice({ data, onChange, errors }: Step2ToneOfVoicePro
           className="text-2xl text-black tracking-[-0.04em]"
           style={{ fontFamily: "'Imbue', serif", fontWeight: 300 }}
         >
-          Tone of voice
+          Tom de voz
         </h2>
         <p className="mt-1 text-sm text-[#A0A0A0] font-light">
-          Describe the brand's voice, personality, and content focus.
+          Descreva a voz da marca, sua personalidade e foco de conteúdo.
         </p>
       </div>
 
       <TextareaField
-        label="Tone of voice"
+        label="Tom de voz"
         required
         value={data.toneOfVoice}
-        placeholder="e.g. Warm and conversational, but never informal. Direct without being cold. Always encouraging, never pushy."
+        placeholder="ex.: Caloroso e próximo, mas nunca informal. Direto sem ser frio. Sempre encorajador, nunca insistente."
         rows={3}
         onChange={(val) => onChange({ toneOfVoice: val })}
         error={errors.toneOfVoice}
       />
 
       <TextareaField
-        label="Brand personality"
+        label="Personalidade da marca"
         required
         value={data.personality}
-        placeholder="e.g. Confident, approachable, and a little playful. The brand feels like a knowledgeable friend — not a salesperson."
+        placeholder="ex.: Confiante, acessível e com um toque de leveza. A marca parece um amigo experiente — não um vendedor."
         rows={3}
         onChange={(val) => onChange({ personality: val })}
         error={errors.personality}
       />
 
       <TextareaField
-        label="Content pillars"
+        label="Pilares de conteúdo"
         required
         value={data.pillars}
-        placeholder="e.g. Product education, behind-the-scenes, customer stories, sustainability, seasonal recipes."
+        placeholder="ex.: Educação sobre produtos, bastidores, histórias de clientes, sustentabilidade, receitas sazonais."
         rows={3}
         onChange={(val) => onChange({ pillars: val })}
         error={errors.pillars}
       />
 
       <TextareaField
-        label="General brand context"
-        hint="(optional)"
+        label="Contexto geral da marca"
+        hint="(opcional)"
         value={data.toneNotes}
-        placeholder="Anything else the AI should know — words to avoid, recurring themes, campaign context, audience notes…"
+        placeholder="Qualquer coisa que a IA deva saber — palavras a evitar, temas recorrentes, contexto de campanha, notas sobre o público…"
         rows={4}
         onChange={(val) => onChange({ toneNotes: val })}
       />

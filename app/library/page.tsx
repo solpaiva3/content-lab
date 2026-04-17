@@ -27,17 +27,17 @@ export default async function LibraryPage({ searchParams }: { searchParams: Prom
               <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
               </svg>
-              Clients
+              Clientes
             </Link>
             <div className="h-4 w-px bg-[#E5E5E5]" />
             <h1
               className="text-lg text-black tracking-[-0.04em]"
               style={{ fontFamily: "'Imbue', serif", fontWeight: 300 }}
             >
-              Content library
+              Biblioteca de conteúdo
             </h1>
           </div>
-          <p className="text-xs text-[#A0A0A0] font-light">{posts.length} saved post{posts.length !== 1 ? "s" : ""}</p>
+          <p className="text-xs text-[#A0A0A0] font-light">{posts.length} post{posts.length !== 1 ? "s" : ""} salvo{posts.length !== 1 ? "s" : ""}</p>
         </div>
       </header>
 
