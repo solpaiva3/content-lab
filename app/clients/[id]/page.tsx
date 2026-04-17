@@ -4,7 +4,7 @@ import { useEffect, useState, useCallback } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { Client, Idea, StructuredPost, parseClient, parseClientPersonality, parseClientPillars } from "@/types";
-import { IdeaCard } from "@/components/IdeaCard";
+import { IdeaCard, type IdeaEdits } from "@/components/IdeaCard";
 import { CarouselPreview } from "@/components/CarouselPreview";
 import { TemplateSelector } from "@/components/TemplateSelector";
 import { TEMPLATES } from "@/lib/ai/templates";
@@ -36,6 +36,9 @@ export default function ClientPage() {
   const [approvedPosts, setApprovedPosts] = useState<Record<string, StructuredPost>>({});
   const [approvedTemplateIds, setApprovedTemplateIds] = useState<Record<string, string>>({});
   const [savedPostIds, setSavedPostIds] = useState<Record<string, string>>({});
+
+  const [tagsExpanded, setTagsExpanded] = useState(false);
+  const [contextExpanded, setContextExpanded] = useState(false);
 
   const [error, setError] = useState("");
 
@@ -121,17 +124,17 @@ export default function ClientPage() {
   }, [client, filledBriefs, mode, templateId]);
 
   // ── Approve ──────────────────────────────────────────────────────
-  const approveIdea = useCallback(async (idea: Idea) => {
+  const approveIdea = useCallback(async (idea: Idea, edits?: IdeaEdits) => {
     if (!client) return;
     setSavingPostFor(idea.id);
     setError("");
     setPosts((prev) => prev.map((p) => p.id === idea.id ? { ...p, status: "approved" } : p));
 
     const structuredPost: StructuredPost = {
-      slides: idea.slides,
-      caption: idea.caption,
-      visualDescription: idea.visualDescription,
-      logoUsage: idea.logoUsage,
+      slides: edits?.slides ?? idea.slides,
+      caption: edits?.caption ?? idea.caption,
+      visualDescription: edits?.visualDescription ?? idea.visualDescription,
+      logoUsage: edits?.logoUsage ?? idea.logoUsage,
     };
     setApprovedPosts((prev) => ({ ...prev, [idea.id]: structuredPost }));
     setApprovedTemplateIds((prev) => ({ ...prev, [idea.id]: templateId }));
@@ -173,8 +176,39 @@ export default function ClientPage() {
   if (!client) return null;
 
   const parsed = parseClient(client);
-  const personalityTags = parseClientPersonality(client);
-  const pillarTags = parseClientPillars(client);
+
+  // ── Brand context classification ──────────────────────────────────
+  // Items with ≤ 5 words are keywords → rendered as color-coded tags.
+  // Longer items are long-form context → rendered as a collapsible paragraph.
+  const TAG_WORD_LIMIT = 5;
+  const TAG_VISIBLE_LIMIT = 8;
+
+  const isTagItem = (s: string) => s.trim().split(/\s+/).length <= TAG_WORD_LIMIT;
+
+  const allPersonality = parseClientPersonality(client);
+  const allPillars = parseClientPillars(client);
+
+  const personalityTags = allPersonality.filter(isTagItem);
+  const pillarTags = allPillars.filter(isTagItem);
+  const longItems = [
+    ...allPersonality.filter((s) => !isTagItem(s)),
+    ...allPillars.filter((s) => !isTagItem(s)),
+  ];
+  const brandContext = longItems.join(" ").trim();
+
+  // Determine visible tags (personality-first, up to limit)
+  const totalTags = personalityTags.length + pillarTags.length;
+  const overflowCount = Math.max(0, totalTags - TAG_VISIBLE_LIMIT);
+  const visiblePersonalityTags = tagsExpanded
+    ? personalityTags
+    : personalityTags.slice(0, TAG_VISIBLE_LIMIT);
+  const pillarSlots = tagsExpanded ? pillarTags.length : Math.max(0, TAG_VISIBLE_LIMIT - personalityTags.length);
+  const visiblePillarTags = pillarTags.slice(0, pillarSlots);
+
+  const CONTEXT_PREVIEW_LEN = 130;
+  const contextPreview = brandContext.length > CONTEXT_PREVIEW_LEN
+    ? brandContext.slice(0, CONTEXT_PREVIEW_LEN).trimEnd() + "…"
+    : brandContext;
 
   return (
     <div className="min-h-screen bg-white">
@@ -229,18 +263,62 @@ export default function ClientPage() {
       </header>
 
       {/* Context strip */}
-      {(personalityTags.length > 0 || pillarTags.length > 0) && (
+      {(totalTags > 0 || brandContext) && (
         <div className="border-b border-[#E5E5E5]">
-          <div className="max-w-6xl mx-auto px-8 py-3 flex flex-wrap gap-2 items-center">
-            {personalityTags.map((tag) => (
-              <span key={tag} className="px-2.5 py-0.5 text-xs text-[#FC0100] bg-[#FC0100]/8 rounded-lg font-light">{tag}</span>
-            ))}
-            {personalityTags.length > 0 && pillarTags.length > 0 && (
-              <span className="text-[#C0C0C0] text-xs">·</span>
+          <div className="max-w-6xl mx-auto px-8 py-3 space-y-2">
+
+            {/* Tag row */}
+            {totalTags > 0 && (
+              <div className="flex flex-wrap gap-2 items-center">
+                {visiblePersonalityTags.map((tag) => (
+                  <span key={tag} className="px-2.5 py-0.5 text-xs text-[#FC0100] bg-[#FC0100]/8 rounded-lg font-light">{tag}</span>
+                ))}
+                {visiblePersonalityTags.length > 0 && visiblePillarTags.length > 0 && (
+                  <span className="text-[#C0C0C0] text-xs">·</span>
+                )}
+                {visiblePillarTags.map((tag) => (
+                  <span key={tag} className="px-2.5 py-0.5 text-xs text-[#474747] bg-[#F0F0F0] rounded-lg font-light">{tag}</span>
+                ))}
+                {overflowCount > 0 && !tagsExpanded && (
+                  <button
+                    onClick={() => setTagsExpanded(true)}
+                    className="text-xs text-[#A0A0A0] hover:text-black font-light transition"
+                  >
+                    +{overflowCount} more
+                  </button>
+                )}
+              </div>
             )}
-            {pillarTags.map((tag) => (
-              <span key={tag} className="px-2.5 py-0.5 text-xs text-[#474747] bg-[#F0F0F0] rounded-lg font-light">{tag}</span>
-            ))}
+
+            {/* Long-form brand context */}
+            {brandContext && (
+              <div className="text-xs text-[#474747] font-light leading-relaxed">
+                {contextExpanded || brandContext === contextPreview ? (
+                  <>
+                    {brandContext}
+                    {brandContext !== contextPreview && (
+                      <button
+                        onClick={() => setContextExpanded(false)}
+                        className="ml-2 text-[#A0A0A0] hover:text-black transition whitespace-nowrap"
+                      >
+                        Show less
+                      </button>
+                    )}
+                  </>
+                ) : (
+                  <>
+                    {contextPreview}{" "}
+                    <button
+                      onClick={() => setContextExpanded(true)}
+                      className="text-[#A0A0A0] hover:text-black transition whitespace-nowrap"
+                    >
+                      View full context
+                    </button>
+                  </>
+                )}
+              </div>
+            )}
+
           </div>
         </div>
       )}
@@ -448,7 +526,7 @@ export default function ClientPage() {
                 <div key={post.id} className="flex flex-col gap-4">
                   <IdeaCard
                     idea={post}
-                    onApprove={() => approveIdea(post)}
+                    onApprove={(edits) => approveIdea(post, edits)}
                     onReject={() => rejectIdea(post.id)}
                     isSaving={savingPostFor === post.id}
                   />

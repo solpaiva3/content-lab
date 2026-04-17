@@ -15,6 +15,20 @@ interface Step3VisualProps {
   onChange: (data: Partial<VisualData>) => void;
 }
 
+const MAX_DIM = 4000;
+
+function readImageDimensions(file: File): Promise<{ w: number; h: number } | null> {
+  // SVGs are vector — dimensions don't apply
+  if (file.type === "image/svg+xml") return Promise.resolve(null);
+  return new Promise((resolve) => {
+    const url = URL.createObjectURL(file);
+    const img = new Image();
+    img.onload = () => { URL.revokeObjectURL(url); resolve({ w: img.naturalWidth, h: img.naturalHeight }); };
+    img.onerror = () => { URL.revokeObjectURL(url); resolve(null); };
+    img.src = url;
+  });
+}
+
 function LogoUploader({
   label,
   variant,
@@ -29,13 +43,23 @@ function LogoUploader({
   const [uploading, setUploading] = useState(false);
   const [uploadError, setUploadError] = useState("");
   const [bgDark, setBgDark] = useState(false);
+  const [dims, setDims] = useState<{ w: number; h: number } | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
   async function handleFile(file: File) {
     setUploading(true);
     setUploadError("");
+    setDims(null);
     console.log(`[logo-upload:${variant}] start — name: "${file.name}", type: "${file.type}", size: ${file.size} bytes`);
     try {
+      const detected = await readImageDimensions(file);
+      if (detected) {
+        setDims(detected);
+        if (detected.w > MAX_DIM || detected.h > MAX_DIM) {
+          console.warn(`[logo-upload:${variant}] oversized: ${detected.w}×${detected.h}`);
+        }
+      }
+
       const fd = new FormData();
       fd.append("file", file);
       fd.append("variant", variant);
@@ -71,6 +95,8 @@ function LogoUploader({
       console.log(`[logo-upload:${variant}] done`);
     }
   }
+
+  const isOversized = dims !== null && (dims.w > MAX_DIM || dims.h > MAX_DIM);
 
   return (
     <div className="space-y-2">
@@ -115,7 +141,25 @@ function LogoUploader({
           }}
         />
       </div>
+
+      {/* Hint — always visible */}
+      {!dims && !uploadError && (
+        <p className="text-[10px] text-[#C0C0C0] font-light">Max recommended: 4000 × 4000 px</p>
+      )}
+
+      {/* Dimensions after upload */}
+      {dims && !uploadError && (
+        isOversized ? (
+          <p className="text-xs text-[#FC0100]">
+            {dims.w} × {dims.h} px — large image, may fail in Figma
+          </p>
+        ) : (
+          <p className="text-[10px] text-[#A0A0A0] font-light">{dims.w} × {dims.h} px</p>
+        )
+      )}
+
       {uploadError && <p className="text-xs text-[#FC0100]">{uploadError}</p>}
+
       {currentUrl && (
         <button
           type="button"
