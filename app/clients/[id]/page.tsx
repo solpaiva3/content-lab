@@ -155,7 +155,7 @@ export default function ClientPage() {
     } finally {
       setSavingPostFor(null);
     }
-  }, [client]);
+  }, [client, templateId]); // templateId must be in deps — stale closure here saves the wrong template
 
   const rejectIdea = (ideaId: string) => {
     setPosts((prev) => prev.map((p) => p.id === ideaId ? { ...p, status: "rejected" } : p));

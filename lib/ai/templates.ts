@@ -161,6 +161,9 @@ export const TEMPLATES_BY_ID: Record<string, CarouselTemplate> = Object.fromEntr
 
 export function getTemplate(id: string): CarouselTemplate {
   const t = TEMPLATES_BY_ID[id];
-  if (!t) throw new Error(`Unknown template: "${id}"`);
+  if (!t) {
+    const valid = TEMPLATES.map((t) => `"${t.id}"`).join(", ");
+    throw new Error(`Template not found: "${id}". Valid options: ${valid}`);
+  }
   return t;
 }
